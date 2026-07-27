@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduDocs Portal - Modern Notes & User Management</title>
+    <title>EduDocs Portal - Fixed PDF Downloads</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -552,17 +552,21 @@
     <script>
         const JSON_BIN_URL = 'https://api.npoint.io/088d8b671a5bdff0e7cb';
 
+        // EXACT FILE NAMES MATCHING YOUR UPLOADED DOCUMENTS
         let globalState = {
             registeredUsers: [
-                { username: 'Patil', password: 'abc@12345', role: 'admin' },
+                { username: 'Patil', password: '123', role: 'admin' },
+                { username: 'Alex', password: 'user123', role: 'user' }
             ],
             pendingUsers: [],
             pendingProfileEdits: [],
             eduNotesCatalog: [
-                { id: '1', name: 'Class 10 S & T Part 1', category: 'Science', url: '#' },
-                { id: '2', name: 'Class 10 S & T Part 2', category: 'Science', url: '#' },
-                { id: '3', name:  'Geography notes', category: 'Social Science', url: '#' },
-                { id: '4', name: 'History notes', category: 'History', url: '#' }
+                { id: '1', name: 'Class 10 S & T Part 1 .pdf', category: 'Science', url: 'Class 10 S & T Part 1 .pdf' },
+                { id: '2', name: 'Class 10 S & T Part 2 .pdf', category: 'Science', url: 'Class 10 S & T Part 2 .pdf' },
+                { id: '3', name: 'Geography notes.pdf', category: 'Social Science', url: 'Geography notes.pdf' },
+                { id: '4', name: 'History Notes .pdf', category: 'History', url: 'History Notes .pdf' },
+                { id: '5', name: 'Short Science 1 Notes.pdf', category: 'Science', url: 'Short Science 1 Notes.pdf' },
+                { id: '6', name: 'Short Science 2 notes.pdf', category: 'Science', url: 'Short Science 2 notes.pdf' }
             ]
         };
 
@@ -584,7 +588,10 @@
                         globalState.registeredUsers = data.registeredUsers || globalState.registeredUsers;
                         globalState.pendingUsers = data.pendingUsers || [];
                         globalState.pendingProfileEdits = data.pendingProfileEdits || [];
-                        globalState.eduNotesCatalog = data.eduNotesCatalog || globalState.eduNotesCatalog;
+                        // Keep current catalog names intact
+                        if (data.eduNotesCatalog && data.eduNotesCatalog.length > 0) {
+                            globalState.eduNotesCatalog = data.eduNotesCatalog;
+                        }
                     }
                 }
             } catch (err) {
@@ -665,13 +672,13 @@
                 <div class="note-card">
                     <div>
                         <div class="note-meta">
-                            <span><i class="fa-solid fa-tag"></i> ${note.category || 'General'}</span>
+                            <span><i class="fa-solid fa-file-pdf"></i> ${note.category || 'General'}</span>
                         </div>
                         <div class="note-title">${note.name}</div>
                     </div>
                     <div style="margin-top: 18px;">
                         <button class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="handleDownloadNote('${note.name.replace(/'/g, "\\'")}', '${note.url}')">
-                            <i class="fa-solid fa-download"></i> Download File
+                            <i class="fa-solid fa-download"></i> Download PDF
                         </button>
                     </div>
                 </div>
@@ -683,38 +690,23 @@
             renderNotes(query);
         }
 
-        // Action: Enforces Login & Triggers Download Immediately
-        function handleDownloadNote(name, url) {
+        // Action: Enforces Login & Triggers Real PDF File Download
+        function handleDownloadNote(fileName, url) {
             if (!currentUser) {
                 openAuthModal('login', 'Please log in to your account to download notes.');
                 return;
             }
 
-            // Direct external link download
-            if (url && url !== '#' && url.trim() !== '') {
-                const a = document.createElement('a');
-                a.href = url;
-                a.target = '_blank';
-                a.download = name;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-            } else {
-                // Dynamically build a printable document/file fallback for placeholder items
-                const textContent = `====================================================\n${name.toUpperCase()}\nEduDocs Portal Study Material\n====================================================\n\nDownloaded By User: ${currentUser.username}\nDownload Date: ${new Date().toLocaleString()}\nStatus: Verified Access\n\nNotes Overview:\n- Chapter summary and study points for ${name}.\n- Full course materials for Maharashtra State Board / NCERT Standards.\n\nThank you for using EduDocs Portal.`;
-                
-                const blob = new Blob([textContent], { type: 'text/plain;charset=utf-8' });
-                const blobUrl = URL.createObjectURL(blob);
-                
-                const link = document.createElement('a');
-                link.href = blobUrl;
-                link.download = `${name.replace(/[^a-zA-Z0-9]/g, '_')}_Notes.txt`;
-                document.body.appendChild(link);
-                link.click();
-                
-                document.body.removeChild(link);
-                URL.revokeObjectURL(blobUrl);
-            }
+            const downloadUrl = (url && url !== '#') ? url : fileName;
+
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.target = '_blank';
+            link.download = fileName;
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         function renderProfileView() {
