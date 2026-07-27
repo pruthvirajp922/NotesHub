@@ -3,1106 +3,932 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduDocs Portal</title>
+    <title>EduDocs Portal - Modern Notes & User Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         :root {
-            --bg-gradient: radial-gradient(circle at 50% 0%, #161b2c 0%, #0d1117 70%);
-            --card-bg: rgba(22, 27, 34, 0.7);
-            --card-hover-bg: rgba(30, 37, 48, 0.85);
-            --border-glow: rgba(56, 139, 253, 0.15);
-            --border-standard: rgba(240, 246, 252, 0.1);
+            --bg-gradient: radial-gradient(circle at 50% 0%, #161b2c 0%, #0d1117 80%);
+            --card-bg: rgba(22, 27, 34, 0.75);
+            --card-hover-bg: rgba(30, 37, 48, 0.9);
+            --glass-border: rgba(240, 246, 252, 0.12);
             --text-main: #f0f6fc;
             --text-muted: #8b949e;
             --accent-primary: #58a6ff;
-            --accent-linear: linear-gradient(135deg, #388bfd 0%, #7928ca 100%);
-            --danger-glow: linear-gradient(135deg, #da3633 0%, #f85149 100%);
-            --success-glow: linear-gradient(135deg, #238636 0%, #2ea043 100%);
-            --admin-purple: linear-gradient(135deg, #8957e5 0%, #bc8cff 100%);
-            --glass-blur: blur(12px);
+            --accent-gradient: linear-gradient(135deg, #388bfd 0%, #7928ca 100%);
+            --danger-gradient: linear-gradient(135deg, #da3633 0%, #f85149 100%);
+            --success-gradient: linear-gradient(135deg, #238636 0%, #2ea043 100%);
+            --warning-gradient: linear-gradient(135deg, #d29922 0%, #bb8009 100%);
+            --radius-lg: 18px;
+            --radius-md: 12px;
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Helvetica, Arial, sans-serif;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         body {
             background: var(--bg-gradient);
-            background-color: #0d1117;
+            background-attachment: fixed;
             color: var(--text-main);
             min-height: 100vh;
-            padding: 15px;
-            overflow-x: hidden;
+            padding-bottom: 60px;
         }
 
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        nav {
+        /* Header / Navbar */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(13, 17, 23, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 16px 5%;
             display: flex;
-            flex-direction: row;
             justify-content: space-between;
             align-items: center;
-            max-width: 1200px;
-            margin: 0 auto 30px auto;
-            padding: 14px 20px;
-            background: rgba(13, 17, 23, 0.6);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--border-standard);
-            border-radius: 16px;
-            gap: 15px;
         }
 
-        .logo {
-            font-size: 1.3rem;
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.35rem;
             font-weight: 800;
-            letter-spacing: -0.5px;
-            background: var(--accent-linear);
+            background: var(--accent-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            white-space: nowrap;
             cursor: pointer;
         }
 
-        .nav-buttons {
+        .nav-actions {
             display: flex;
-            flex-wrap: wrap;
             align-items: center;
-            justify-content: flex-end;
-            gap: 10px;
+            gap: 12px;
         }
 
-        .nav-buttons button {
-            background: transparent;
-            color: var(--text-main);
-            border: 1px solid var(--border-standard);
-            padding: 8px 16px;
-            border-radius: 10px;
-            cursor: pointer;
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border-radius: var(--radius-md);
+            border: 1px solid transparent;
+            font-size: 0.88rem;
             font-weight: 600;
-            font-size: 0.85rem;
-            transition: all 0.25s ease;
-            white-space: nowrap;
-        }
-
-        .nav-buttons button:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: var(--text-muted);
-        }
-
-        .nav-buttons .logout-btn {
-            background: var(--danger-glow);
-            border: none;
-            box-shadow: 0 4px 12px rgba(218, 54, 51, 0.25);
-        }
-
-        .nav-buttons .welcome-msg {
-            font-size: 0.85rem;
-        }
-
-        h1.page-title {
-            text-align: center;
-            font-size: 2.2rem;
-            margin-bottom: 35px;
-            font-weight: 800;
-            letter-spacing: -1px;
-            padding: 0 10px;
-        }
-
-        .notes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 50px;
-        }
-
-        .notes-card {
-            background: var(--card-bg);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--border-standard);
-            border-radius: 20px;
-            padding: 30px 20px 20px 20px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
             align-items: center;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            gap: 8px;
+            color: #fff;
+            text-decoration: none;
         }
 
-        .notes-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(56, 139, 253, 0.4);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
-            background: var(--card-hover-bg);
-        }
-
-        .pdf-icon-container {
-            margin-bottom: 15px;
-            z-index: 1;
-            color: #ff4848;
-            filter: drop-shadow(0 6px 10px rgba(255, 72, 72, 0.2));
-        }
-
-        .title-wrapper {
-            width: 100%;
-            overflow: hidden;
-            position: relative;
-            margin-bottom: 8px;
-            z-index: 1;
-        }
-
-        .notes-card h3 {
-            font-size: 1.2rem;
-            font-weight: 700;
-            line-height: 1.3;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            width: 100%;
-        }
-
-        .notes-card p {
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            margin-bottom: 20px;
-            z-index: 1;
-        }
-
-        .download-btn {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.04);
-            color: #e6edf3;
-            border: 1px solid var(--border-standard);
-            padding: 12px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            text-align: center;
-            z-index: 1;
-        }
-
-        .notes-card:hover .download-btn {
-            background: var(--accent-linear);
-            border-color: transparent;
-            color: #ffffff;
+        .btn-primary {
+            background: var(--accent-gradient);
             box-shadow: 0 4px 15px rgba(56, 139, 253, 0.3);
         }
 
-        .empty-state {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 60px 20px;
+        .btn-primary:hover {
+            opacity: 0.92;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(56, 139, 253, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--glass-border);
+            color: var(--text-main);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .btn-success {
+            background: var(--success-gradient);
+        }
+
+        .btn-danger {
+            background: var(--danger-gradient);
+        }
+
+        .btn-warning {
+            background: var(--warning-gradient);
+            color: #fff;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1280px;
+            margin: 35px auto 0;
+            padding: 0 20px;
+        }
+
+        /* Glass Cards */
+        .glass-card {
             background: var(--card-bg);
-            border: 2px dashed var(--border-standard);
-            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            margin-bottom: 25px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Grid Layouts */
+        .notes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 22px;
+        }
+
+        .note-card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: 22px;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .note-card:hover {
+            background: var(--card-hover-bg);
+            transform: translateY(-4px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .note-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .note-meta {
+            font-size: 0.8rem;
             color: var(--text-muted);
-        }
-
-        .view-panel {
-            display: none;
-            width: 100%;
-            max-width: 440px;
-            margin: 40px auto;
-            background: var(--card-bg);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--border-standard);
-            border-radius: 24px;
-            padding: 30px 25px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-        }
-
-        .view-panel.active {
-            display: block;
-        }
-
-        .view-panel h2 {
-            margin-bottom: 20px;
-            text-align: center;
-            font-weight: 800;
-            font-size: 1.6rem;
-        }
-
-        .form-group {
             margin-bottom: 16px;
+            display: flex;
+            gap: 12px;
+        }
+
+        /* Inputs & Forms */
+        .form-group {
+            margin-bottom: 18px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 6px;
-            color: var(--text-muted);
-            font-size: 0.8rem;
+            font-size: 0.82rem;
             font-weight: 600;
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            margin-bottom: 8px;
         }
 
-        .form-group input {
+        .form-control {
             width: 100%;
-            padding: 12px;
-            background: rgba(13, 17, 23, 0.8);
-            border: 1px solid var(--border-standard);
-            border-radius: 12px;
-            color: var(--text-main);
+            background: rgba(13, 17, 23, 0.7);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            color: #fff;
             font-size: 0.95rem;
-            transition: all 0.2s ease;
-        }
-
-        .form-group input:focus {
             outline: none;
-            border-color: #388bfd;
-            box-shadow: 0 0 0 3px rgba(56, 139, 253, 0.2);
+            transition: var(--transition);
         }
 
-        .form-group input:disabled {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-muted);
-            cursor: not-allowed;
-            border-style: dashed;
+        .form-control:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 12px rgba(88, 166, 255, 0.25);
         }
 
-        .submit-btn {
-            width: 100%;
-            background: var(--accent-linear);
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 12px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 5px;
-            box-shadow: 0 4px 15px rgba(56, 139, 253, 0.25);
-            transition: all 0.2s ease;
-        }
-
-        .switch-form-link {
-            text-align: center;
-            margin-top: 15px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        .switch-form-link span {
-            color: var(--accent-primary);
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .status-result {
-            margin-top: 15px;
-            padding: 12px;
-            border-radius: 12px;
-            text-align: center;
-            font-weight: 600;
-            font-size: 0.9rem;
-            display: none;
-        }
-
-        .admin-container {
-            display: none;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .admin-container.active {
-            display: block;
-        }
-
-        .admin-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            margin-top: 15px;
-        }
-
-        .admin-full-width {
-            grid-column: 1 / -1;
-        }
-
-        .admin-box {
-            background: var(--card-bg);
-            border: 1px solid var(--border-standard);
-            border-radius: 20px;
-            padding: 20px;
-        }
-
-        .admin-box h2 {
-            margin-bottom: 15px;
-            border-bottom: 1px solid var(--border-standard);
-            padding-bottom: 10px;
-            font-size: 1.25rem;
-            font-weight: 700;
-        }
-
-        .table-responsive-wrapper {
-            width: 100%;
+        /* Tables */
+        .table-responsive {
             overflow-x: auto;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--glass-border);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 5px;
-            min-width: 400px;
-        }
-
-        th, td {
             text-align: left;
-            padding: 12px 10px;
-            border-bottom: 1px solid var(--border-standard);
             font-size: 0.9rem;
         }
 
         th {
+            background: rgba(13, 17, 23, 0.9);
+            padding: 16px 20px;
             color: var(--text-muted);
             font-weight: 600;
             text-transform: uppercase;
-            font-size: 0.75rem;
+            font-size: 0.78rem;
+            letter-spacing: 0.5px;
         }
 
-        .action-btns {
-            display: flex;
+        td {
+            padding: 16px 20px;
+            border-top: 1px solid var(--glass-border);
+            background: rgba(22, 27, 34, 0.4);
+        }
+
+        tr:hover td {
+            background: rgba(30, 37, 48, 0.6);
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
             gap: 6px;
-        }
-
-        .accept-btn, .delete-btn {
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.75rem;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.78rem;
             font-weight: 600;
         }
 
-        .accept-btn { background: var(--success-glow); }
-        .delete-btn { background: var(--danger-glow); }
+        .badge-success { background: rgba(35, 134, 54, 0.2); color: #3fb950; border: 1px solid rgba(63, 185, 80, 0.3); }
+        .badge-warning { background: rgba(210, 153, 34, 0.2); color: #d29922; border: 1px solid rgba(210, 153, 34, 0.3); }
 
-        @media (max-width: 900px) {
-            .admin-grid { grid-template-columns: 1fr; }
-            .admin-full-width { grid-column: auto; }
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
         }
-        @media (max-width: 600px) {
-            nav { flex-direction: column; text-align: center; }
-            .nav-buttons { justify-content: center; width: 100%; }
+
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        .modal-body {
+            background: #161b22;
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 440px;
+            padding: 32px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px; right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        /* Banner Notice */
+        .notice-banner {
+            background: rgba(56, 139, 253, 0.1);
+            border: 1px solid rgba(56, 139, 253, 0.3);
+            border-radius: var(--radius-md);
+            padding: 14px 20px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.9rem;
+            color: var(--accent-primary);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active {
+            display: block;
         }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="logo" onclick="switchView('home-view')">EduDocs</div>
-        <div class="nav-buttons" id="nav-actions"></div>
-    </nav>
+    <header>
+        <div class="brand" onclick="switchView('home-view')">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <span>EduDocs Portal</span>
+        </div>
+        <div class="nav-actions">
+            <button class="btn btn-secondary" onclick="switchView('home-view')">
+                <i class="fa-solid fa-book-open"></i> Notes Catalog
+            </button>
+            <div id="auth-buttons-container">
+                </div>
+        </div>
+    </header>
 
     <div class="container">
-        
-        <div id="home-view" style="display: block;">
-            <h1 class="page-title">Download Notes</h1>
-            
-            <div class="notes-grid">
 
-                <div class="notes-card">
-                    <div class="pdf-icon-container">
-                        <svg width="65" height="65" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#1e2530" stroke="#ff4848" stroke-width="1.5"/>
-                            <path d="M14 2V8H20" fill="#2e3748" stroke="#ff4848" stroke-width="1.5"/>
-                            <rect x="7" y="13" width="10" height="5" rx="1" fill="#ff4848"/>
-                            <text x="8.5" y="17" fill="#ffffff" font-family="sans-serif" font-size="3.5" font-weight="bold">PDF</text>
-                        </svg>
+        <div id="visitor-notice" class="notice-banner">
+            <i class="fa-solid fa-circle-info fa-lg"></i>
+            <span><strong>Guest Access:</strong> You are currently viewing all uploaded study materials. Please <strong>Log In</strong> to download files.</span>
+        </div>
+
+        <section id="home-view" class="view-section active">
+            <div class="glass-card">
+                <div class="section-header">
+                    <div class="section-title">
+                        <i class="fa-solid fa-folder-open text-primary"></i> Available Study Materials & Notes
                     </div>
-                    <h3>Class 10 Science & Tech Part 1</h3>
-                    <p>Maharashtra Board Full Notes</p>
-                    <a href="Class 10 S & T Part 1 .pdf" download style="text-decoration:none; width:100%;">
-                        <button class="download-btn">Download Document</button>
-                    </a>
+                    <div style="max-width: 300px; width: 100%;">
+                        <input type="text" class="form-control" id="search-notes-input" placeholder="Search notes..." onkeyup="filterNotes()">
+                    </div>
                 </div>
 
-                <div class="notes-card">
-                    <div class="pdf-icon-container">
-                        <svg width="65" height="65" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#1e2530" stroke="#ff4848" stroke-width="1.5"/>
-                            <path d="M14 2V8H20" fill="#2e3748" stroke="#ff4848" stroke-width="1.5"/>
-                            <rect x="7" y="13" width="10" height="5" rx="1" fill="#ff4848"/>
-                            <text x="8.5" y="17" fill="#ffffff" font-family="sans-serif" font-size="3.5" font-weight="bold">PDF</text>
-                        </svg>
+                <div class="notes-grid" id="notes-container">
                     </div>
-                    <h3>Class 10 Science & Tech Part 2</h3>
-                    <p>Maharashtra Board Full Notes</p>
-                    <a href="Class 10 S & T Part 2 .pdf" download style="text-decoration:none; width:100%;">
-                        <button class="download-btn">Download Document</button>
-                    </a>
-                </div>
-
-                <div class="notes-card">
-                    <div class="pdf-icon-container">
-                        <svg width="65" height="65" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#1e2530" stroke="#ff4848" stroke-width="1.5"/>
-                            <path d="M14 2V8H20" fill="#2e3748" stroke="#ff4848" stroke-width="1.5"/>
-                            <rect x="7" y="13" width="10" height="5" rx="1" fill="#ff4848"/>
-                            <text x="8.5" y="17" fill="#ffffff" font-family="sans-serif" font-size="3.5" font-weight="bold">PDF</text>
-                        </svg>
-                    </div>
-                    <h3>Class 10 Geography Notes</h3>
-                    <p>Marathi Medium Notes</p>
-                    <a href="Geography notes.pdf" download style="text-decoration:none; width:100%;">
-                        <button class="download-btn">Download Document</button>
-                    </a>
-                </div>
-
-                <div class="notes-card">
-                    <div class="pdf-icon-container">
-                        <svg width="65" height="65" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#1e2530" stroke="#ff4848" stroke-width="1.5"/>
-                            <path d="M14 2V8H20" fill="#2e3748" stroke="#ff4848" stroke-width="1.5"/>
-                            <rect x="7" y="13" width="10" height="5" rx="1" fill="#ff4848"/>
-                            <text x="8.5" y="17" fill="#ffffff" font-family="sans-serif" font-size="3.5" font-weight="bold">PDF</text>
-                        </svg>
-                    </div>
-                    <h3>Class 10 History Notes</h3>
-                    <p>Marathi Medium Notes</p>
-                    <a href="History Notes .pdf" download style="text-decoration:none; width:100%;">
-                        <button class="download-btn">Download Document</button>
-                    </a>
-                </div>
-
-                <div class="notes-card">
-                    <div class="pdf-icon-container">
-                        <svg width="65" height="65" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#1e2530" stroke="#ff4848" stroke-width="1.5"/>
-                            <path d="M14 2V8H20" fill="#2e3748" stroke="#ff4848" stroke-width="1.5"/>
-                            <rect x="7" y="13" width="10" height="5" rx="1" fill="#ff4848"/>
-                            <text x="8.5" y="17" fill="#ffffff" font-family="sans-serif" font-size="3.5" font-weight="bold">PDF</text>
-                        </svg>
-                    </div>
-                    <h3>Short Science 1 Revision Notes</h3>
-                    <p>Quick Chapterwise Summary</p>
-                    <a href="Short Science 1 Notes.pdf" download style="text-decoration:none; width:100%;">
-                        <button class="download-btn">Download Document</button>
-                    </a>
-                </div>
-
-                <div class="notes-card">
-                    <div class="pdf-icon-container">
-                        <svg width="65" height="65" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#1e2530" stroke="#ff4848" stroke-width="1.5"/>
-                            <path d="M14 2V8H20" fill="#2e3748" stroke="#ff4848" stroke-width="1.5"/>
-                            <rect x="7" y="13" width="10" height="5" rx="1" fill="#ff4848"/>
-                            <text x="8.5" y="17" fill="#ffffff" font-family="sans-serif" font-size="3.5" font-weight="bold">PDF</text>
-                        </svg>
-                    </div>
-                    <h3>Short Science 2 Revision Notes</h3>
-                    <p>Quick Chapterwise Summary</p>
-                    <a href="Short Science 2 notes.pdf" download style="text-decoration:none; width:100%;">
-                        <button class="download-btn">Download Document</button>
-                    </a>
-                </div>
-
             </div>
-            </div>
-        </div>
+        </section>
 
-        <div id="login-view" class="view-panel">
-            <h2>Sign In</h2>
-            <form id="login-form">
-                <div class="form-group">
-                    <label for="login-username">Username</label>
-                    <input type="text" id="login-username" required>
-                </div>
-                <div class="form-group">
-                    <label for="login-password">Password</label>
-                    <input type="password" id="login-password" required>
-                </div>
-                <button type="submit" class="submit-btn">Login</button>
-                <div class="switch-form-link">
-                    Don't have an account? <span onclick="switchView('signup-view')">Sign Up here</span><br><br>
-                    Want to check status? <span onclick="switchView('status-view')">Check Request Status</span>
-                </div>
-            </form>
-        </div>
 
-        <div id="signup-view" class="view-panel">
-            <h2>User Registration</h2>
-            <form id="signup-form">
-                <div class="form-group">
-                    <label for="signup-username">Create Username</label>
-                    <input type="text" id="signup-username" required>
+        <section id="profile-view" class="view-section">
+            <div class="glass-card" style="max-width: 600px; margin: 0 auto;">
+                <div class="section-header">
+                    <div class="section-title">
+                        <i class="fa-solid fa-user-gear text-primary"></i> Edit Profile Request
+                    </div>
+                    <span id="user-status-tag" class="badge badge-success">Active</span>
                 </div>
-                <div class="form-group">
-                    <label for="signup-password">Create Password</label>
-                    <input type="password" id="signup-password" required>
-                </div>
-                <button type="submit" class="submit-btn">Request Access Account</button>
-                <div class="switch-form-link">
-                    Already have an account? <span onclick="switchView('login-view')">Sign In here</span><br><br>
-                    Already submitted a request? <span onclick="switchView('status-view')">Check Status</span>
-                </div>
-            </form>
-        </div>
 
-        <div id="status-view" class="view-panel">
-            <h2>Check Request Status</h2>
-            <form id="status-form">
-                <div class="form-group">
-                    <label for="status-username">Enter Your Registered Username</label>
-                    <input type="text" id="status-username" placeholder="e.g., JohnDoe" required>
+                <div style="background: rgba(255,255,255,0.03); border-radius: var(--radius-md); padding: 18px; margin-bottom: 22px; display: flex; align-items: center; gap: 16px;">
+                    <i class="fa-solid fa-circle-user fa-3x" style="color: var(--accent-primary);"></i>
+                    <div>
+                        <h4 id="profile-display-username" style="font-size: 1.1rem; font-weight: 700;">-</h4>
+                        <p style="font-size: 0.82rem; color: var(--text-muted);">Standard Student Account</p>
+                    </div>
                 </div>
-                <button type="submit" class="submit-btn" style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-standard); box-shadow: none;">Check Status</button>
-                <div id="status-display" class="status-result"></div>
-                <div class="switch-form-link">
-                    <span onclick="switchView('login-view')">Back to Login</span> | <span onclick="switchView('signup-view')">Back to Sign Up</span>
-                </div>
-            </form>
-        </div>
 
-        <div id="profile-view" class="view-panel">
-            <h2>Account Profile Settings</h2>
-            <form id="profile-form">
-                <div class="form-group">
-                    <label for="profile-username">Username</label>
-                    <input type="text" id="profile-username" required>
-                </div>
-                <div class="form-group">
-                    <label for="profile-password">Password</label>
-                    <input type="password" id="profile-password" required>
-                </div>
-                <button type="submit" class="submit-btn">Save Changes</button>
-                
-                <div id="danger-zone" style="margin-top: 25px; padding-top: 20px; border-top: 1px dashed var(--border-standard);">
-                    <button type="button" class="submit-btn" id="delete-profile-btn" onclick="deleteOwnProfile()" style="background: var(--danger-glow); box-shadow: 0 4px 12px rgba(218, 54, 51, 0.25);">
-                        Delete My Profile Account
+                <form id="edit-profile-form" onsubmit="handleProfileEditSubmit(event)">
+                    <div class="form-group">
+                        <label>New Username</label>
+                        <input type="text" id="edit-username-input" class="form-control" placeholder="Enter new username" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>New Password (Optional)</label>
+                        <input type="password" id="edit-password-input" class="form-control" placeholder="Leave blank to keep existing password">
+                    </div>
+
+                    <div style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 20px;">
+                        <i class="fa-solid fa-clock-rotate-left me-1"></i> Profile edits require Admin approval before updating live.
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                        <i class="fa-solid fa-paper-plane"></i> Submit Edit Request
                     </button>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        </section>
 
-        <div id="admin-view" class="admin-container">
-            <h1 class="page-title" style="background: var(--admin-purple); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Admin Console</h1>
+
+        <section id="admin-view" class="view-section">
             
-            <div class="admin-grid">
-                <div class="admin-box">
-                    <h2>Upload New PDF Notes From Device</h2>
-                    <form id="add-notes-form">
-                        <div class="form-group">
-                            <label for="notes-title">Custom Notes Name</label>
-                            <input type="text" id="notes-title" placeholder="e.g., Chemistry Syllabus Details" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="notes-file-input">Choose PDF File from Computer/Device</label>
-                            <input type="file" id="notes-file-input" accept=".pdf" required style="padding: 8px; background: rgba(0,0,0,0.3); border:1px dashed var(--border-standard); width:100%; color:#fff; border-radius:10px;">
-                        </div>
-                        <button type="submit" class="submit-btn" id="upload-submit-btn" style="background: var(--admin-purple); box-shadow: 0 4px 15px rgba(137, 87, 229, 0.25);">Publish Device File</button>
-                    </form>
-                </div>
-
-                <div class="admin-box">
-                    <h2 style="color: #e3b341;">Pending Registration Requests</h2>
-                    <div class="table-responsive-wrapper">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Username</th>
-                                    <th>Password</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="pending-table-body"></tbody>
-                        </table>
+            <div class="glass-card">
+                <div class="section-header">
+                    <div class="section-title" style="color: #d29922;">
+                        <i class="fa-solid fa-user-clock"></i> Pending Registration & Login Requests
                     </div>
                 </div>
-
-                <div class="admin-box admin-full-width">
-                    <h2>Manage Approved Members</h2>
-                    <div class="table-responsive-wrapper">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Username</th>
-                                    <th>Password</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="members-table-body"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="admin-box admin-full-width">
-                    <h2>Manage & Remove Published Notes</h2>
-                    <div class="table-responsive-wrapper">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Notes Title</th>
-                                    <th>File Hash Token Reference</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="admin-notes-table-body"></tbody>
-                        </table>
-                    </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Requested Role</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-pending-users-tbody">
+                            </tbody>
+                    </table>
                 </div>
             </div>
-        </div>
+
+            <div class="glass-card">
+                <div class="section-header">
+                    <div class="section-title" style="color: #58a6ff;">
+                        <i class="fa-solid fa-pen-to-square"></i> Pending Profile Edit Requests
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Current Username</th>
+                                <th>Requested Username</th>
+                                <th>Requested Password</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-pending-edits-tbody">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <div class="section-header">
+                    <div class="section-title">
+                        <i class="fa-solid fa-users-gear text-primary"></i> Active Registered Users & Credentials
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Password (Admin View)</th>
+                                <th>Role</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-active-users-tbody">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
 
     </div>
 
-    <script>
-        // Unique secure data channel key layout setup
-        const CLOUD_API_URL = "https://kvdb.io/MN9u8q4m6qU6VvS9g8uP9c/patil_edudocs_secure_v5"; 
 
+    <div class="modal-overlay" id="auth-modal">
+        <div class="modal-body">
+            <button class="modal-close" onclick="closeAuthModal()"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div id="login-form-wrapper">
+                <h3 style="margin-bottom: 8px; font-weight: 700;">Account Login</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 22px;" id="login-modal-subtext">Sign in to download notes and manage your account.</p>
+
+                <form onsubmit="handleLoginSubmit(event)">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="login-username" class="form-control" required placeholder="Enter username">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="login-password" class="form-control" required placeholder="Enter password">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 10px;">
+                        <i class="fa-solid fa-right-to-bracket"></i> Log In
+                    </button>
+                </form>
+                <div style="text-align: center; margin-top: 18px; font-size: 0.85rem; color: var(--text-muted);">
+                    Don't have an account? <a href="#" style="color: var(--accent-primary);" onclick="toggleAuthForm('signup')">Request Account</a>
+                </div>
+            </div>
+
+            <div id="signup-form-wrapper" style="display: none;">
+                <h3 style="margin-bottom: 8px; font-weight: 700;">Request New Account</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 22px;">Registration requires approval from the Administrator.</p>
+
+                <form onsubmit="handleSignupSubmit(event)">
+                    <div class="form-group">
+                        <label>Choose Username</label>
+                        <input type="text" id="signup-username" class="form-control" required placeholder="Choose a username">
+                    </div>
+                    <div class="form-group">
+                        <label>Choose Password</label>
+                        <input type="password" id="signup-password" class="form-control" required placeholder="Choose a password">
+                    </div>
+                    <button type="submit" class="btn btn-success" style="width: 100%; justify-content: center; margin-top: 10px;">
+                        <i class="fa-solid fa-user-plus"></i> Submit Registration
+                    </button>
+                </form>
+                <div style="text-align: center; margin-top: 18px; font-size: 0.85rem; color: var(--text-muted);">
+                    Already have an account? <a href="#" style="color: var(--accent-primary);" onclick="toggleAuthForm('login')">Log In</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <script>
+        // API Cloud Storage Configuration
+        const JSON_BIN_URL = 'https://api.npoint.io/088d8b671a5bdff0e7cb';
+
+        // Default Global State Schema
         let globalState = {
-            users: [],
+            registeredUsers: [
+                { username: 'Patil', password: '123', role: 'admin' },
+                { username: 'Alex', password: 'user123', role: 'user' }
+            ],
             pendingUsers: [],
-            eduNotesCatalog: [],
-            adminPassword: "123@abc"
+            pendingProfileEdits: [],
+            eduNotesCatalog: [
+                { id: '1', name: 'Class 10 Science & Technology Part 1', category: 'Science', url: '#' },
+                { id: '2', name: 'Class 10 Science & Technology Part 2', category: 'Science', url: '#' },
+                { id: '3', name: 'Class 10 Geography Chapter Notes', category: 'Social Science', url: '#' },
+                { id: '4', name: 'Class 10 History & Political Science', category: 'History', url: '#' }
+            ]
         };
 
-        let currentUser = JSON.parse(sessionStorage.getItem('activeUser')) || null;
+        let currentUser = null; // Session User
 
+        // Initializer
+        window.onload = async function() {
+            await syncFromCloud();
+            renderNavbar();
+            renderNotes();
+            switchView('home-view');
+        };
+
+        // Cloud Data Synchronization
         async function syncFromCloud() {
             try {
-                const response = await fetch(CLOUD_API_URL);
-                if (response.ok) {
-                    const data = await response.json();
+                const res = await fetch(JSON_BIN_URL);
+                if (res.ok) {
+                    const data = await res.json();
                     if (data && typeof data === 'object') {
-                        globalState = data;
-                        if (!globalState.users) globalState.users = [];
-                        if (!globalState.pendingUsers) globalState.pendingUsers = [];
-                        if (!globalState.eduNotesCatalog) globalState.eduNotesCatalog = [];
-                        if (!globalState.adminPassword) globalState.adminPassword = "123@abc";
+                        globalState.registeredUsers = data.registeredUsers || globalState.registeredUsers;
+                        globalState.pendingUsers = data.pendingUsers || [];
+                        globalState.pendingProfileEdits = data.pendingProfileEdits || [];
+                        globalState.eduNotesCatalog = data.eduNotesCatalog || globalState.eduNotesCatalog;
                     }
-                } else {
-                    await pushToCloud();
                 }
-            } catch (e) {
-                console.log("Database fetch diagnostic message:", e);
+            } catch (err) {
+                console.warn('Cloud sync offline. Using local memory state.');
             }
         }
 
-        async function pushToCloud() {
+        async function syncToCloud() {
             try {
-                await fetch(CLOUD_API_URL, {
+                await fetch(JSON_BIN_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(globalState)
                 });
-            } catch (e) {
-                console.error("Cloud push execution error:", e);
+            } catch (err) {
+                console.error('Failed to sync to cloud:', err);
             }
         }
 
-        async function switchView(viewId) {
-            document.getElementById('home-view').style.display = 'none';
-            document.getElementById('login-view').classList.remove('active');
-            document.getElementById('signup-view').classList.remove('active');
-            document.getElementById('status-view').classList.remove('active');
-            document.getElementById('admin-view').classList.remove('active');
-            document.getElementById('profile-view').classList.remove('active');
-
-            document.getElementById('status-display').style.display = 'none';
-            document.getElementById('status-form').reset();
-
-            await syncFromCloud();
+        // View Navigation
+        function switchView(viewId) {
+            document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
 
             if (viewId === 'home-view') {
-                document.getElementById('home-view').style.display = 'block';
                 renderNotes();
-            } else {
-                document.getElementById(viewId).classList.add('active');
-            }
-            updateNavbar();
-
-            if (viewId === 'admin-view') {
-                renderAdminManagementData();
-            }
-            if (viewId === 'profile-view') {
-                setupProfileFields();
+            } else if (viewId === 'profile-view') {
+                renderProfileView();
+            } else if (viewId === 'admin-view') {
+                renderAdminPortal();
             }
         }
 
-        function updateNavbar() {
-            const navActions = document.getElementById('nav-actions');
-            if (currentUser) {
-                if (currentUser.username === 'Patil') {
-                    navActions.innerHTML = `
-                        <span class="welcome-msg" style="color:#bc8cff; font-weight:bold;">Admin: Patil</span>
-                        <button onclick="switchView('home-view')">View Platform</button>
-                        <button onclick="switchView('profile-view')">Settings Profile</button>
-                        <button onclick="switchView('admin-view')" style="border-color:#8957e5">Admin Panel</button>
-                        <button class="logout-btn" onclick="logout()">Logout</button>
-                    `;
-                } else {
-                    navActions.innerHTML = `
-                        <span class="welcome-msg" style="color:var(--text-muted);">Welcome, ${currentUser.username}</span>
-                        <button onclick="switchView('home-view')">Home</button>
-                        <button onclick="switchView('profile-view')">My Profile</button>
-                        <button class="logout-btn" onclick="logout()">Logout</button>
-                    `;
-                }
-            } else {
-                navActions.innerHTML = `
-                    <button onclick="switchView('home-view')">Browse</button>
-                    <button onclick="switchView('login-view')">Sign In</button>
-                    <button onclick="switchView('signup-view')">Sign Up</button>
-                `;
-            }
-        }
+        // Navbar Authentication Rendering
+        function renderNavbar() {
+            const container = document.getElementById('auth-buttons-container');
+            const notice = document.getElementById('visitor-notice');
 
-        function setupProfileFields() {
-            if (!currentUser) return;
-            const usernameInput = document.getElementById('profile-username');
-            const passwordInput = document.getElementById('profile-password');
-            const deleteBox = document.getElementById('danger-zone');
-
-            if (currentUser.username === 'Patil') {
-                usernameInput.value = 'Patil';
-                usernameInput.disabled = true;
-                passwordInput.value = globalState.adminPassword;
-                deleteBox.style.display = 'none';
-            } else {
-                usernameInput.disabled = false;
-                usernameInput.value = currentUser.username;
-                passwordInput.value = currentUser.password;
-                deleteBox.style.display = 'block';
-            }
-        }
-
-        document.getElementById('profile-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            await syncFromCloud();
-            
-            const newName = document.getElementById('profile-username').value.trim();
-            const newPass = document.getElementById('profile-password').value;
-
-            if (currentUser.username === 'Patil') {
-                globalState.adminPassword = newPass;
-                await pushToCloud();
-                alert('Admin password updated successfully!');
-                switchView('admin-view');
-            } else {
-                if (newName.toLowerCase() === 'patil') return alert('Name reserved for system admin!');
-                
-                const userIndex = globalState.users.findIndex(u => u.username === currentUser.username);
-                if (userIndex !== -1) {
-                    const existingUser = globalState.users.find((u, index) => u.username.toLowerCase() === newName.toLowerCase() && index !== userIndex);
-                    if (existingUser) return alert('Username is already taken!');
-
-                    globalState.users[userIndex].username = newName;
-                    globalState.users[userIndex].password = newPass;
-                    
-                    currentUser.username = newName;
-                    currentUser.password = newPass;
-                    sessionStorage.setItem('activeUser', JSON.stringify(currentUser));
-                    
-                    await pushToCloud();
-                    alert('Profile updated and synced successfully!');
-                    switchView('home-view');
-                }
-            }
-        });
-
-        async function deleteOwnProfile() {
-            if (currentUser.username === 'Patil') return;
-            if (!confirm('Are you sure you want to permanently delete your account?')) return;
-
-            await syncFromCloud();
-            globalState.users = globalState.users.filter(u => u.username !== currentUser.username);
-            await pushToCloud();
-            
-            alert('Your account profile has been deleted.');
-            logout();
-        }
-
-        function renderNotes() {
-            const container = document.getElementById('notes-container');
-            container.innerHTML = '';
-            const notesFiles = globalState.eduNotesCatalog || [];
-            
-            if (notesFiles.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <h2>No Content Uploaded by Admin</h2>
-                        <p style="margin-top: 10px; color:#8b949e;">Please contact system manager <strong>Patil</strong> to upload PDF modules.</p>
-                    </div>`;
-                return;
-            }
-
-            notesFiles.forEach(note => {
-                const card = document.createElement('div');
-                card.className = 'notes-card';
-                
-                const pdfIconSvg = `
-                    <div class="pdf-icon-container">
-                        <svg width="65" height="65" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#1e2530" stroke="#ff4848" stroke-width="1.5" stroke-linejoin="round"/>
-                            <path d="M14 2V8H20" fill="#2e3748" stroke="#ff4848" stroke-width="1.5" stroke-linejoin="round"/>
-                            <rect x="7" y="13" width="10" height="5" rx="1" fill="#ff4848"/>
-                            <text x="8.5" y="17" fill="#ffffff" font-family="sans-serif" font-size="3.5" font-weight="bold">PDF</text>
-                        </svg>
-                    </div>
-                `;
-
-                card.innerHTML = `
-                    ${pdfIconSvg}
-                    <div class="title-wrapper">
-                        <h3>${note.title}</h3>
-                    </div>
-                    <p>Download Notes Here</p>
-                    <button class="download-btn" onclick="handleDownload('${note.id}')">Download Document</button>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        // Handles secure extraction and browser download targeting
-        function handleDownload(noteId) {
             if (!currentUser) {
-                alert('Access Denied: Please Sign In to download files!');
-                switchView('login-view');
-                return;
-            }
-
-            const notesFiles = globalState.eduNotesCatalog || [];
-            const note = notesFiles.find(n => n.id === noteId);
-
-            if (note && note.fileData) {
-                const win = window.open(note.fileData, '_blank');
-                if (!win) {
-                    alert('Pop-up blocked! Please allow popups to download files directly.');
-                }
+                notice.style.display = 'flex';
+                container.innerHTML = `
+                    <button class="btn btn-primary" onclick="openAuthModal('login')">
+                        <i class="fa-solid fa-right-to-bracket"></i> Log In / Register
+                    </button>
+                `;
             } else {
-                alert('File data path error or expired link.');
-            }
-        }
-
-        function renderAdminManagementData() {
-            const pendingUsers = globalState.pendingUsers || [];
-            const users = globalState.users || [];
-            const notesFiles = globalState.eduNotesCatalog || [];
-
-            const pendingTbody = document.getElementById('pending-table-body');
-            pendingTbody.innerHTML = '';
-            if (pendingUsers.length === 0) {
-                pendingTbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">No requests pending.</td></tr>`;
-            } else {
-                pendingUsers.forEach((user, index) => {
-                    pendingTbody.innerHTML += `
-                        <tr>
-                            <td>${user.username}</td>
-                            <td><code>${user.password}</code></td>
-                            <td>
-                                <div class="action-btns">
-                                    <button class="accept-btn" onclick="approveUser(${index})">Accept</button>
-                                    <button class="delete-btn" onclick="rejectUser(${index})">Reject</button>
-                                </div>
-                            </td>
-                        </tr>`;
-                });
-            }
-
-            const membersTbody = document.getElementById('members-table-body');
-            membersTbody.innerHTML = '';
-            if (users.length === 0) {
-                membersTbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">No members yet.</td></tr>`;
-            } else {
-                users.forEach((user, index) => {
-                    membersTbody.innerHTML += `<tr><td>${user.username}</td><td><code>${user.password}</code></td><td><button class="delete-btn" onclick="deleteUser(${index})">Remove</button></td></tr>`;
-                });
-            }
-
-            const notesTbody = document.getElementById('admin-notes-table-body');
-            notesTbody.innerHTML = '';
-            if (notesFiles.length === 0) {
-                notesTbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">No PDF Notes found.</td></tr>`;
-            } else {
-                notesFiles.forEach((note) => {
-                    notesTbody.innerHTML += `<tr><td>${note.title}</td><td style="color: var(--text-muted); font-size:0.85rem; font-family:monospace;">${note.id}</td><td><button class="delete-btn" onclick="deleteNote('${note.id}')">Remove</button></td></tr>`;
-                });
-            }
-        }
-
-        async function approveUser(index) {
-            globalState.users.push(globalState.pendingUsers.splice(index, 1)[0]);
-            await pushToCloud();
-            renderAdminManagementData();
-        }
-
-        async function rejectUser(index) {
-            globalState.pendingUsers.splice(index, 1);
-            await pushToCloud();
-            renderAdminManagementData();
-        }
-
-        document.getElementById('status-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            await syncFromCloud();
-            const targetUser = document.getElementById('status-username').value.trim();
-            const displayBox = document.getElementById('status-display');
-            displayBox.style.display = 'block';
-
-            if (globalState.users.find(u => u.username.toLowerCase() === targetUser.toLowerCase())) {
-                displayBox.style.backgroundColor = 'rgba(35, 134, 54, 0.15)'; displayBox.style.color = '#2ea043';
-                displayBox.innerHTML = '✔ Status: APPROVED! You can now Sign In safely.';
-            } else if (globalState.pendingUsers.find(u => u.username.toLowerCase() === targetUser.toLowerCase())) {
-                displayBox.style.backgroundColor = 'rgba(227, 179, 65, 0.15)'; displayBox.style.color = '#e3b341';
-                displayBox.innerHTML = '⏳ Status: PENDING. Waiting for Admin Patil approval.';
-            } else {
-                displayBox.style.backgroundColor = 'rgba(218, 54, 51, 0.15)'; displayBox.style.color = '#f85149';
-                displayBox.innerHTML = '❌ Status: Profile Not Found. Register first.';
-            }
-        });
-
-        document.getElementById('signup-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            await syncFromCloud();
-            const userIn = document.getElementById('signup-username').value.trim();
-            const passIn = document.getElementById('signup-password').value;
-            if (userIn.toLowerCase() === 'patil') return alert('Reserved name!');
-            
-            if (globalState.users.find(u => u.username.toLowerCase() === userIn.toLowerCase()) || 
-                globalState.pendingUsers.find(u => u.username.toLowerCase() === userIn.toLowerCase())) {
-                return alert('Username taken or pending approval.');
-            }
-
-            globalState.pendingUsers.push({ username: userIn, password: passIn });
-            await pushToCloud();
-            alert('Request sent to Admin Patil!');
-            this.reset();
-            switchView('home-view');
-        });
-
-        document.getElementById('login-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            await syncFromCloud();
-            const userIn = document.getElementById('login-username').value.trim();
-            const passIn = document.getElementById('login-password').value;
-
-            if (userIn === 'Patil' && passIn === globalState.adminPassword) {
-                currentUser = { username: 'Patil' };
-                sessionStorage.setItem('activeUser', JSON.stringify(currentUser));
-                this.reset();
-                switchView('admin-view');
-                return;
-            }
-
-            const matchedUser = globalState.users.find(u => u.username === userIn && u.password === passIn);
-            if (matchedUser) {
-                currentUser = matchedUser;
-                sessionStorage.setItem('activeUser', JSON.stringify(currentUser));
-                this.reset();
-                switchView('home-view');
-            } else {
-                alert('Invalid credentials or pending approval.');
-            }
-        });
-
-        function logout() {
-            currentUser = null;
-            sessionStorage.removeItem('activeUser');
-            switchView('home-view');
-        }
-
-        async function deleteUser(index) {
-            globalState.users.splice(index, 1);
-            await pushToCloud();
-            renderAdminManagementData();
-        }
-
-        async function deleteNote(id) {
-            globalState.eduNotesCatalog = globalState.eduNotesCatalog.filter(note => note.id !== id);
-            await pushToCloud();
-            renderNotes();
-            renderAdminManagementData();
-        }
-
-        // REBUILT: Uploads real device files to file.io and safely maps short links into kvdb.io cloud state!
-        document.getElementById('add-notes-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const title = document.getElementById('notes-title').value.trim();
-            const fileInput = document.getElementById('notes-file-input');
-            const uploadBtn = document.getElementById('upload-submit-btn');
-
-            if (fileInput.files.length === 0) return alert('Please choose a file first!');
-            const targetFile = fileInput.files[0];
-
-            uploadBtn.innerText = "Uploading File Data... Please Wait";
-            uploadBtn.disabled = true;
-
-            try {
-                // Prepares standard multi-part form data payload stream
-                const formData = new FormData();
-                formData.append('file', targetFile);
-
-                // Dispatches real computer document directly to a zero-config cloud hosting pipeline
-                const fileResponse = await fetch('https://file.io/?expires=1y', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (!fileResponse.ok) throw new Error("Upload hosting API failed.");
-                const fileResult = await fileResponse.json();
-
-                if (fileResult && fileResult.success) {
-                    await syncFromCloud();
-                    
-                    globalState.eduNotesCatalog.push({
-                        id: 'note_' + Date.now(),
-                        title: title,
-                        fileData: fileResult.link // Lightweight URL generated directly from the device's storage
-                    });
-
-                    await pushToCloud();
-                    alert('File uploaded successfully from your device and published to all members!');
-                    document.getElementById('add-notes-form').reset();
-                    switchView('home-view');
+                notice.style.display = 'none';
+                if (currentUser.username === 'Patil' || currentUser.role === 'admin') {
+                    container.innerHTML = `
+                        <button class="btn btn-warning" onclick="switchView('admin-view')">
+                            <i class="fa-solid fa-shield-halved"></i> Admin Portal
+                        </button>
+                        <button class="btn btn-secondary" onclick="handleLogout()">
+                            <i class="fa-solid fa-power-off"></i> Logout
+                        </button>
+                    `;
                 } else {
-                    alert('Storage allocation error. Try a smaller file.');
+                    container.innerHTML = `
+                        <button class="btn btn-secondary" onclick="switchView('profile-view')">
+                            <i class="fa-solid fa-circle-user"></i> ${currentUser.username}
+                        </button>
+                        <button class="btn btn-secondary" onclick="handleLogout()">
+                            <i class="fa-solid fa-power-off"></i> Logout
+                        </button>
+                    `;
                 }
-            } catch(error) {
-                console.error(error);
-                alert('Failed to parse document data. Ensure you are connected to the internet.');
-            } finally {
-                uploadBtn.innerText = "Publish Device File";
-                uploadBtn.disabled = false;
             }
-        });
+        }
 
-        setInterval(async () => {
-            const previousTotalNotes = (globalState.eduNotesCatalog || []).length;
-            const previousTotalPending = (globalState.pendingUsers || []).length;
-            
-            await syncFromCloud();
-            
-            if (document.getElementById('home-view').style.display === 'block' && (globalState.eduNotesCatalog || []).length !== previousTotalNotes) {
-                renderNotes();
-            }
-            if (document.getElementById('admin-view').classList.contains('active') && (globalState.pendingUsers || []).length !== previousTotalPending) {
-                renderAdminManagementData();
-            }
-        }, 5000);
+        // Render Notes Catalog (Viewable before login)
+        function renderNotes(filter = '') {
+            const container = document.getElementById('notes-container');
+            const notes = globalState.eduNotesCatalog.filter(n => n.name.toLowerCase().includes(filter.toLowerCase()));
 
-        window.onload = async function() {
-            await syncFromCloud();
-            renderNotes();
-            if (currentUser && currentUser.username === 'Patil') {
-                switchView('admin-view');
+            if (notes.length === 0) {
+                container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">No study materials found.</div>`;
+                return;
+            }
+
+            container.innerHTML = notes.map(note => `
+                <div class="note-card">
+                    <div>
+                        <div class="note-meta">
+                            <span><i class="fa-solid fa-tag"></i> ${note.category || 'General'}</span>
+                        </div>
+                        <div class="note-title">${note.name}</div>
+                    </div>
+                    <div style="margin-top: 18px;">
+                        <button class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="handleDownloadNote('${note.name}', '${note.url}')">
+                            <i class="fa-solid fa-download"></i> Download File
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterNotes() {
+            const query = document.getElementById('search-notes-input').value;
+            renderNotes(query);
+        }
+
+        // Download Action (Enforces Login)
+        function handleDownloadNote(name, url) {
+            if (!currentUser) {
+                openAuthModal('login', 'Please log in to your account to download notes.');
+                return;
+            }
+            
+            if (url && url !== '#') {
+                window.open(url, '_blank');
             } else {
-                switchView('home-view');
+                alert(`Downloading: "${name}"`);
             }
-        };
+        }
+
+        // Profile Edit Handling for Normal Users
+        function renderProfileView() {
+            if (!currentUser) return;
+            document.getElementById('profile-display-username').innerText = currentUser.username;
+            document.getElementById('edit-username-input').value = currentUser.username;
+            document.getElementById('edit-password-input').value = '';
+
+            const hasPending = globalState.pendingProfileEdits.some(e => e.originalUsername === currentUser.username);
+            const statusTag = document.getElementById('user-status-tag');
+
+            if (hasPending) {
+                statusTag.className = 'badge badge-warning';
+                statusTag.innerText = 'Edit Pending Approval';
+            } else {
+                statusTag.className = 'badge badge-success';
+                statusTag.innerText = 'Active';
+            }
+        }
+
+        async function handleProfileEditSubmit(e) {
+            e.preventDefault();
+            const newUsername = document.getElementById('edit-username-input').value.trim();
+            const newPassword = document.getElementById('edit-password-input').value.trim();
+
+            if (!newUsername) return;
+
+            // Remove existing pending request for this user if present
+            globalState.pendingProfileEdits = globalState.pendingProfileEdits.filter(p => p.originalUsername !== currentUser.username);
+
+            globalState.pendingProfileEdits.push({
+                originalUsername: currentUser.username,
+                requestedUsername: newUsername,
+                requestedPassword: newPassword || null
+            });
+
+            await syncToCloud();
+            alert('Profile update request submitted! Waiting for Admin approval.');
+            renderProfileView();
+        }
+
+        // Admin Portal Rendering
+        function renderAdminPortal() {
+            // Render Pending Registrations
+            const pendingBody = document.getElementById('admin-pending-users-tbody');
+            if (globalState.pendingUsers.length === 0) {
+                pendingBody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">No pending registration requests.</td></tr>`;
+            } else {
+                pendingBody.innerHTML = globalState.pendingUsers.map((u, index) => `
+                    <tr>
+                        <td><strong>${u.username}</strong></td>
+                        <td>${u.role || 'user'}</td>
+                        <td>
+                            <button class="btn btn-success" style="padding: 6px 12px; font-size: 0.8rem;" onclick="approveUserRegistration(${index})">
+                                <i class="fa-solid fa-check"></i> Approve
+                            </button>
+                            <button class="btn btn-danger" style="padding: 6px 12px; font-size: 0.8rem;" onclick="rejectUserRegistration(${index})">
+                                <i class="fa-solid fa-xmark"></i> Reject
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            // Render Pending Profile Edits
+            const editsBody = document.getElementById('admin-pending-edits-tbody');
+            if (globalState.pendingProfileEdits.length === 0) {
+                editsBody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">No pending profile edit requests.</td></tr>`;
+            } else {
+                editsBody.innerHTML = globalState.pendingProfileEdits.map((e, index) => `
+                    <tr>
+                        <td><strong>${e.originalUsername}</strong></td>
+                        <td style="color: var(--accent-primary);">${e.requestedUsername}</td>
+                        <td style="font-family: monospace;">${e.requestedPassword ? e.requestedPassword : '(Unchanged)'}</td>
+                        <td>
+                            <button class="btn btn-success" style="padding: 6px 12px; font-size: 0.8rem;" onclick="approveProfileEdit(${index})">
+                                <i class="fa-solid fa-check"></i> Approve
+                            </button>
+                            <button class="btn btn-danger" style="padding: 6px 12px; font-size: 0.8rem;" onclick="rejectProfileEdit(${index})">
+                                <i class="fa-solid fa-xmark"></i> Reject
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            // Render Active Users List (with passwords)
+            const activeBody = document.getElementById('admin-active-users-tbody');
+            activeBody.innerHTML = globalState.registeredUsers.map((u, index) => `
+                <tr>
+                    <td><strong>${u.username}</strong></td>
+                    <td style="font-family: monospace; letter-spacing: 1px;">${u.password}</td>
+                    <td><span class="badge ${u.role === 'admin' ? 'badge-warning' : 'badge-success'}">${u.role || 'user'}</span></td>
+                    <td>
+                        ${u.username !== 'Patil' ? `
+                            <button class="btn btn-danger" style="padding: 6px 12px; font-size: 0.8rem;" onclick="removeActiveUser(${index})">
+                                <i class="fa-solid fa-trash-can"></i> Remove
+                            </button>
+                        ` : '<span style="color: var(--text-muted); font-size: 0.8rem;">Master Admin</span>'}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Admin Approval Actions
+        async function approveUserRegistration(index) {
+            const approved = globalState.pendingUsers.splice(index, 1)[0];
+            globalState.registeredUsers.push(approved);
+            await syncToCloud();
+            renderAdminPortal();
+        }
+
+        async function rejectUserRegistration(index) {
+            globalState.pendingUsers.splice(index, 1);
+            await syncToCloud();
+            renderAdminPortal();
+        }
+
+        async function approveProfileEdit(index) {
+            const edit = globalState.pendingProfileEdits.splice(index, 1)[0];
+            const user = globalState.registeredUsers.find(u => u.username === edit.originalUsername);
+            if (user) {
+                user.username = edit.requestedUsername;
+                if (edit.requestedPassword) {
+                    user.password = edit.requestedPassword;
+                }
+                if (currentUser && currentUser.username === edit.originalUsername) {
+                    currentUser.username = user.username;
+                    currentUser.password = user.password;
+                }
+            }
+            await syncToCloud();
+            renderNavbar();
+            renderAdminPortal();
+        }
+
+        async function rejectProfileEdit(index) {
+            globalState.pendingProfileEdits.splice(index, 1);
+            await syncToCloud();
+            renderAdminPortal();
+        }
+
+        async function removeActiveUser(index) {
+            if (confirm('Are you sure you want to remove this user?')) {
+                globalState.registeredUsers.splice(index, 1);
+                await syncToCloud();
+                renderAdminPortal();
+            }
+        }
+
+        // Auth Modal Controls
+        function openAuthModal(mode = 'login', customText = null) {
+            document.getElementById('auth-modal').classList.add('active');
+            if (customText) {
+                document.getElementById('login-modal-subtext').innerText = customText;
+            } else {
+                document.getElementById('login-modal-subtext').innerText = 'Sign in to download notes and manage your account.';
+            }
+            toggleAuthForm(mode);
+        }
+
+        function closeAuthModal() {
+            document.getElementById('auth-modal').classList.remove('active');
+        }
+
+        function toggleAuthForm(mode) {
+            document.getElementById('login-form-wrapper').style.display = mode === 'login' ? 'block' : 'none';
+            document.getElementById('signup-form-wrapper').style.display = mode === 'signup' ? 'block' : 'none';
+        }
+
+        // Auth Forms Submission
+        async function handleLoginSubmit(e) {
+            e.preventDefault();
+            const uInput = document.getElementById('login-username').value.trim();
+            const pInput = document.getElementById('login-password').value.trim();
+
+            await syncFromCloud();
+
+            const match = globalState.registeredUsers.find(u => u.username === uInput && u.password === pInput);
+
+            if (match) {
+                currentUser = match;
+                closeAuthModal();
+                renderNavbar();
+                if (currentUser.username === 'Patil' || currentUser.role === 'admin') {
+                    switchView('admin-view');
+                } else {
+                    switchView('home-view');
+                }
+            } else {
+                const isPending = globalState.pendingUsers.some(u => u.username === uInput);
+                if (isPending) {
+                    alert('Your account is pending approval from the Admin.');
+                } else {
+                    alert('Invalid username or password.');
+                }
+            }
+        }
+
+        async function handleSignupSubmit(e) {
+            e.preventDefault();
+            const uInput = document.getElementById('signup-username').value.trim();
+            const pInput = document.getElementById('signup-password').value.trim();
+
+            const exists = globalState.registeredUsers.some(u => u.username === uInput) || 
+                           globalState.pendingUsers.some(u => u.username === uInput);
+
+            if (exists) {
+                alert('Username already exists or is pending approval.');
+                return;
+            }
+
+            globalState.pendingUsers.push({ username: uInput, password: pInput, role: 'user' });
+            await syncToCloud();
+
+            alert('Registration request submitted! Please wait for Admin approval.');
+            closeAuthModal();
+        }
+
+        function handleLogout() {
+            currentUser = null;
+            renderNavbar();
+            switchView('home-view');
+        }
     </script>
 </body>
 </html>
