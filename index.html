@@ -331,7 +331,6 @@
             color: var(--accent-primary);
         }
 
-        /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; transform: scale(0.96); }
             to { opacity: 1; transform: scale(1); }
@@ -551,10 +550,8 @@
 
 
     <script>
-        // API Cloud Storage Configuration
         const JSON_BIN_URL = 'https://api.npoint.io/088d8b671a5bdff0e7cb';
 
-        // Default Global State Schema
         let globalState = {
             registeredUsers: [
                 { username: 'Patil', password: '123', role: 'admin' },
@@ -563,36 +560,15 @@
             pendingUsers: [],
             pendingProfileEdits: [],
             eduNotesCatalog: [
-    { 
-        id: '1', 
-        name: 'Class 10 Science & Technology Part 1', 
-        category: 'Science', 
-        url: 'https://your-domain.com/files/Class_10_ST_Part_1.pdf' 
-    },
-    { 
-        id: '2', 
-        name: 'Class 10 Science & Technology Part 2', 
-        category: 'Science', 
-        url: 'https://your-domain.com/files/Class_10_ST_Part_2.pdf' 
-    },
-    { 
-        id: '3', 
-        name: 'Class 10 Geography Chapter Notes', 
-        category: 'Social Science', 
-        url: 'https://your-domain.com/files/Geography_Notes.pdf' 
-    },
-    { 
-        id: '4', 
-        name: 'Class 10 History & Political Science', 
-        category: 'History', 
-        url: 'https://your-domain.com/files/History_Notes.pdf' 
-    }
-]
+                { id: '1', name: 'Class 10 Science & Technology Part 1', category: 'Science', url: '#' },
+                { id: '2', name: 'Class 10 Science & Technology Part 2', category: 'Science', url: '#' },
+                { id: '3', name: 'Class 10 Geography Chapter Notes', category: 'Social Science', url: '#' },
+                { id: '4', name: 'Class 10 History & Political Science', category: 'History', url: '#' }
+            ]
         };
 
-        let currentUser = null; // Session User
+        let currentUser = null;
 
-        // Initializer
         window.onload = async function() {
             await syncFromCloud();
             renderNavbar();
@@ -600,7 +576,6 @@
             switchView('home-view');
         };
 
-        // Cloud Data Synchronization
         async function syncFromCloud() {
             try {
                 const res = await fetch(JSON_BIN_URL);
@@ -630,7 +605,6 @@
             }
         }
 
-        // View Navigation
         function switchView(viewId) {
             document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
@@ -644,7 +618,6 @@
             }
         }
 
-        // Navbar Authentication Rendering
         function renderNavbar() {
             const container = document.getElementById('auth-buttons-container');
             const notice = document.getElementById('visitor-notice');
@@ -680,7 +653,6 @@
             }
         }
 
-        // Render Notes Catalog (Viewable before login)
         function renderNotes(filter = '') {
             const container = document.getElementById('notes-container');
             const notes = globalState.eduNotesCatalog.filter(n => n.name.toLowerCase().includes(filter.toLowerCase()));
@@ -699,7 +671,7 @@
                         <div class="note-title">${note.name}</div>
                     </div>
                     <div style="margin-top: 18px;">
-                        <button class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="handleDownloadNote('${note.name}', '${note.url}')">
+                        <button class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="handleDownloadNote('${note.name.replace(/'/g, "\\'")}', '${note.url}')">
                             <i class="fa-solid fa-download"></i> Download File
                         </button>
                     </div>
@@ -712,41 +684,40 @@
             renderNotes(query);
         }
 
-        // Download Action (Enforces Login)
-       // Download Action (Enforces Login & Triggers Download)
-function handleDownloadNote(name, url) {
-    if (!currentUser) {
-        openAuthModal('login', 'Please log in to your account to download notes.');
-        return;
-    }
-    
-    // If a valid external URL is provided
-    if (url && url !== '#' && url.trim() !== '') {
-        const link = document.createElement('a');
-        link.href = url;
-        link.target = '_blank';
-        link.download = name;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    } else {
-        // Fallback: Dynamically generate a downloadable study file for placeholders
-        const content = `=========================================\n${name}\nEduDocs Study Portal Document\n=========================================\n\nDownloaded by: ${currentUser.username}\nDate: ${new Date().toLocaleDateString()}\n\nThank you for using EduDocs Portal.`;
-        
-        const blob = new Blob([content], { type: 'text/plain' });
-        const blobUrl = URL.createObjectURL(blob);
-        
-        const link = document.createElement('a');
-        link.href = blobUrl;
-        link.download = `${name.replace(/[^a-zA-Z0-9]/g, '_')}.txt`;
-        document.body.appendChild(link);
-        link.click();
-        
-        document.body.removeChild(link);
-        URL.revokeObjectURL(blobUrl);
-    }
-}
-        // Profile Edit Handling for Normal Users
+        // Action: Enforces Login & Triggers Download Immediately
+        function handleDownloadNote(name, url) {
+            if (!currentUser) {
+                openAuthModal('login', 'Please log in to your account to download notes.');
+                return;
+            }
+
+            // Direct external link download
+            if (url && url !== '#' && url.trim() !== '') {
+                const a = document.createElement('a');
+                a.href = url;
+                a.target = '_blank';
+                a.download = name;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            } else {
+                // Dynamically build a printable document/file fallback for placeholder items
+                const textContent = `====================================================\n${name.toUpperCase()}\nEduDocs Portal Study Material\n====================================================\n\nDownloaded By User: ${currentUser.username}\nDownload Date: ${new Date().toLocaleString()}\nStatus: Verified Access\n\nNotes Overview:\n- Chapter summary and study points for ${name}.\n- Full course materials for Maharashtra State Board / NCERT Standards.\n\nThank you for using EduDocs Portal.`;
+                
+                const blob = new Blob([textContent], { type: 'text/plain;charset=utf-8' });
+                const blobUrl = URL.createObjectURL(blob);
+                
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = `${name.replace(/[^a-zA-Z0-9]/g, '_')}_Notes.txt`;
+                document.body.appendChild(link);
+                link.click();
+                
+                document.body.removeChild(link);
+                URL.revokeObjectURL(blobUrl);
+            }
+        }
+
         function renderProfileView() {
             if (!currentUser) return;
             document.getElementById('profile-display-username').innerText = currentUser.username;
@@ -772,7 +743,6 @@ function handleDownloadNote(name, url) {
 
             if (!newUsername) return;
 
-            // Remove existing pending request for this user if present
             globalState.pendingProfileEdits = globalState.pendingProfileEdits.filter(p => p.originalUsername !== currentUser.username);
 
             globalState.pendingProfileEdits.push({
@@ -786,9 +756,7 @@ function handleDownloadNote(name, url) {
             renderProfileView();
         }
 
-        // Admin Portal Rendering
         function renderAdminPortal() {
-            // Render Pending Registrations
             const pendingBody = document.getElementById('admin-pending-users-tbody');
             if (globalState.pendingUsers.length === 0) {
                 pendingBody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">No pending registration requests.</td></tr>`;
@@ -809,7 +777,6 @@ function handleDownloadNote(name, url) {
                 `).join('');
             }
 
-            // Render Pending Profile Edits
             const editsBody = document.getElementById('admin-pending-edits-tbody');
             if (globalState.pendingProfileEdits.length === 0) {
                 editsBody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">No pending profile edit requests.</td></tr>`;
@@ -831,7 +798,6 @@ function handleDownloadNote(name, url) {
                 `).join('');
             }
 
-            // Render Active Users List (with passwords)
             const activeBody = document.getElementById('admin-active-users-tbody');
             activeBody.innerHTML = globalState.registeredUsers.map((u, index) => `
                 <tr>
@@ -849,7 +815,6 @@ function handleDownloadNote(name, url) {
             `).join('');
         }
 
-        // Admin Approval Actions
         async function approveUserRegistration(index) {
             const approved = globalState.pendingUsers.splice(index, 1)[0];
             globalState.registeredUsers.push(approved);
@@ -895,7 +860,6 @@ function handleDownloadNote(name, url) {
             }
         }
 
-        // Auth Modal Controls
         function openAuthModal(mode = 'login', customText = null) {
             document.getElementById('auth-modal').classList.add('active');
             if (customText) {
@@ -915,7 +879,6 @@ function handleDownloadNote(name, url) {
             document.getElementById('signup-form-wrapper').style.display = mode === 'signup' ? 'block' : 'none';
         }
 
-        // Auth Forms Submission
         async function handleLoginSubmit(e) {
             e.preventDefault();
             const uInput = document.getElementById('login-username').value.trim();
