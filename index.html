@@ -563,11 +563,31 @@
             pendingUsers: [],
             pendingProfileEdits: [],
             eduNotesCatalog: [
-                { id: '1', name: 'Class 10 Science & Technology Part 1', category: 'Science', url: '#' },
-                { id: '2', name: 'Class 10 Science & Technology Part 2', category: 'Science', url: '#' },
-                { id: '3', name: 'Class 10 Geography Chapter Notes', category: 'Social Science', url: '#' },
-                { id: '4', name: 'Class 10 History & Political Science', category: 'History', url: '#' }
-            ]
+    { 
+        id: '1', 
+        name: 'Class 10 Science & Technology Part 1', 
+        category: 'Science', 
+        url: 'https://your-domain.com/files/Class_10_ST_Part_1.pdf' 
+    },
+    { 
+        id: '2', 
+        name: 'Class 10 Science & Technology Part 2', 
+        category: 'Science', 
+        url: 'https://your-domain.com/files/Class_10_ST_Part_2.pdf' 
+    },
+    { 
+        id: '3', 
+        name: 'Class 10 Geography Chapter Notes', 
+        category: 'Social Science', 
+        url: 'https://your-domain.com/files/Geography_Notes.pdf' 
+    },
+    { 
+        id: '4', 
+        name: 'Class 10 History & Political Science', 
+        category: 'History', 
+        url: 'https://your-domain.com/files/History_Notes.pdf' 
+    }
+]
         };
 
         let currentUser = null; // Session User
@@ -693,19 +713,39 @@
         }
 
         // Download Action (Enforces Login)
-        function handleDownloadNote(name, url) {
-            if (!currentUser) {
-                openAuthModal('login', 'Please log in to your account to download notes.');
-                return;
-            }
-            
-            if (url && url !== '#') {
-                window.open(url, '_blank');
-            } else {
-                alert(`Downloading: "${name}"`);
-            }
-        }
-
+       // Download Action (Enforces Login & Triggers Download)
+function handleDownloadNote(name, url) {
+    if (!currentUser) {
+        openAuthModal('login', 'Please log in to your account to download notes.');
+        return;
+    }
+    
+    // If a valid external URL is provided
+    if (url && url !== '#' && url.trim() !== '') {
+        const link = document.createElement('a');
+        link.href = url;
+        link.target = '_blank';
+        link.download = name;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    } else {
+        // Fallback: Dynamically generate a downloadable study file for placeholders
+        const content = `=========================================\n${name}\nEduDocs Study Portal Document\n=========================================\n\nDownloaded by: ${currentUser.username}\nDate: ${new Date().toLocaleDateString()}\n\nThank you for using EduDocs Portal.`;
+        
+        const blob = new Blob([content], { type: 'text/plain' });
+        const blobUrl = URL.createObjectURL(blob);
+        
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = `${name.replace(/[^a-zA-Z0-9]/g, '_')}.txt`;
+        document.body.appendChild(link);
+        link.click();
+        
+        document.body.removeChild(link);
+        URL.revokeObjectURL(blobUrl);
+    }
+}
         // Profile Edit Handling for Normal Users
         function renderProfileView() {
             if (!currentUser) return;
