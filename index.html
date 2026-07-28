@@ -682,7 +682,6 @@
             if (savedSession) {
                 try {
                     const parsedUser = JSON.parse(savedSession);
-                    // Re-match with registeredUsers array to ensure up-to-date roles/passwords
                     const matchedUser = globalState.registeredUsers.find(u => u.username === parsedUser.username);
                     currentUser = matchedUser || parsedUser;
                 } catch (e) {
@@ -693,7 +692,6 @@
             renderNavbar();
             renderNotes();
 
-            // Check if logged in user is Admin (either by username 'Patil' or role 'admin')
             if (currentUser && (currentUser.username === 'Patil' || currentUser.role === 'admin')) {
                 switchView('admin-view');
             } else {
@@ -723,7 +721,7 @@
                 console.warn('Cloud sync offline. Loading local backup state.');
             }
 
-            // Fallback to local storage if API fails or offline
+            // Fallback to local storage
             const localData = localStorage.getItem('eduDocsState');
             if (localData) {
                 try {
@@ -733,7 +731,6 @@
         }
 
         async function syncToCloud() {
-            // Save locally first so data isn't lost if network drops
             localStorage.setItem('eduDocsState', JSON.stringify(globalState));
 
             try {
@@ -832,6 +829,9 @@
                 return;
             }
 
+            // DOWNLOAD POPUP MESSAGE
+            alert(`Download starting for "${fileName}"... Thank you for downloading!`);
+
             const downloadUrl = (url && url !== '#') ? url : fileName;
             const link = document.createElement('a');
             link.href = encodeURIComponent(downloadUrl);
@@ -849,7 +849,6 @@
             const upperValid = /[A-Z]/.test(password);
             const symbolValid = /[^A-Za-z0-9]/.test(password);
 
-            // Update UI Checklist Items
             updateRuleUI('rule-length', lengthValid);
             updateRuleUI('rule-number', numberValid);
             updateRuleUI('rule-upper', upperValid);
@@ -1067,11 +1066,14 @@
 
             if (match) {
                 currentUser = match;
-                // SAVE SESSION TO LOCAL STORAGE
                 localStorage.setItem('eduDocsSession', JSON.stringify(currentUser));
 
                 closeAuthModal();
                 renderNavbar();
+
+                // WELCOME MESSAGE POPUP
+                alert(`Welcome, ${currentUser.username}! You are now logged in.`);
+
                 if (currentUser.username === 'Patil' || currentUser.role === 'admin') {
                     switchView('admin-view');
                 } else {
@@ -1111,12 +1113,17 @@
         }
 
         function handleLogout() {
-            currentUser = null;
-            // CLEAR SAVED SESSION
-            localStorage.removeItem('eduDocsSession');
+            // CONFIRM LOGOUT FOR ADMIN & USER
+            if (confirm('Are you sure you want to log out?')) {
+                currentUser = null;
+                localStorage.removeItem('eduDocsSession');
 
-            renderNavbar();
-            switchView('home-view');
+                renderNavbar();
+                switchView('home-view');
+
+                // LOGOUT SUCCESS POPUP
+                alert('Successfully logged out!');
+            }
         }
     </script>
 </body>
