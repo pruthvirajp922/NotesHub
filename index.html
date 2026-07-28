@@ -69,6 +69,16 @@
             cursor: pointer;
         }
 
+        .brand-author {
+            font-size: 0.85rem;
+            font-weight: 700;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0.9;
+            margin-left: 2px;
+        }
+
         .nav-actions {
             display: flex;
             align-items: center;
@@ -101,6 +111,35 @@
         .btn-success { background: var(--success-gradient); }
         .btn-danger { background: var(--danger-gradient); }
         .btn-warning { background: var(--warning-gradient); color: #fff; }
+
+        /* Toast Popup Notification (No OK button needed) */
+        #toast-notification {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 9999;
+            background: rgba(22, 27, 34, 0.95);
+            border: 1px solid var(--accent-primary);
+            color: #fff;
+            padding: 14px 22px;
+            border-radius: var(--radius-md);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        #toast-notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
         /* Main Container */
         .container {
@@ -376,7 +415,10 @@
                 padding: 12px 16px;
             }
             .brand span {
-                font-size: 1.1rem;
+                font-size: 1.05rem;
+            }
+            .brand-author {
+                font-size: 0.75rem;
             }
             .nav-actions {
                 width: 100%;
@@ -404,7 +446,14 @@
             .strength-rules {
                 grid-template-columns: 1fr;
             }
+            #toast-notification {
+                left: 15px;
+                right: 15px;
+                bottom: 15px;
+                justify-content: center;
+            }
         }
+        
         /* Category Section Header */
         .category-header {
             grid-column: 1 / -1;
@@ -429,6 +478,7 @@
         <div class="brand" onclick="switchView('home-view')">
             <i class="fa-solid fa-graduation-cap"></i>
             <span>EduDocs Portal</span>
+            <span class="brand-author">By Pruthviraj</span>
         </div>
         <div class="nav-actions">
             <button class="btn btn-secondary" onclick="switchView('home-view')">
@@ -438,6 +488,11 @@
             </div>
         </div>
     </header>
+
+    <div id="toast-notification">
+        <i class="fa-solid fa-circle-info fa-lg" id="toast-icon"></i>
+        <span id="toast-message">Notification</span>
+    </div>
 
     <div class="container">
 
@@ -673,6 +728,23 @@
 
         let currentUser = null;
         let isPasswordStrongEnough = false;
+        let toastTimeout = null;
+
+        function showToast(message, iconClass = 'fa-solid fa-circle-check') {
+            const toast = document.getElementById('toast-notification');
+            const toastMsg = document.getElementById('toast-message');
+            const toastIcon = document.getElementById('toast-icon');
+
+            toastMsg.innerText = message;
+            toastIcon.className = iconClass;
+
+            toast.classList.add('show');
+
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
 
         window.onload = async function() {
             await syncFromCloud();
@@ -829,8 +901,8 @@
                 return;
             }
 
-            // DOWNLOAD POPUP MESSAGE
-            alert(`Download starting for "${fileName}"... Thank you for downloading!`);
+            // AUTO-CLOSING TOAST POPUP (NO OK NEEDED)
+            showToast(`Download starting... Thank you for downloading!`, 'fa-solid fa-file-arrow-down');
 
             const downloadUrl = (url && url !== '#') ? url : fileName;
             const link = document.createElement('a');
@@ -940,7 +1012,7 @@
             });
 
             await syncToCloud();
-            alert('Profile update request submitted! Waiting for Admin approval.');
+            showToast('Profile edit request submitted! Waiting for Admin approval.');
             renderProfileView();
         }
 
@@ -1071,8 +1143,8 @@
                 closeAuthModal();
                 renderNavbar();
 
-                // WELCOME MESSAGE POPUP
-                alert(`Welcome, ${currentUser.username}! You are now logged in.`);
+                // AUTO-CLOSING WELCOME POPUP (NO OK NEEDED)
+                showToast(`Welcome, ${currentUser.username}!`, 'fa-solid fa-hand-wave');
 
                 if (currentUser.username === 'Patil' || currentUser.role === 'admin') {
                     switchView('admin-view');
@@ -1081,8 +1153,8 @@
                 }
             } else {
                 const isPending = globalState.pendingUsers.some(u => u.username === uInput);
-                if (isPending) alert('Your account is pending approval from the Admin.');
-                else alert('Invalid username or password.');
+                if (isPending) showToast('Your account is pending approval from Admin.', 'fa-solid fa-clock');
+                else showToast('Invalid username or password.', 'fa-solid fa-triangle-exclamation');
             }
         }
 
@@ -1090,7 +1162,7 @@
             e.preventDefault();
 
             if (!isPasswordStrongEnough) {
-                alert('Please enter a stronger password (at least 8 characters with numbers/symbols) before creating an account.');
+                showToast('Please enter a stronger password before registering.', 'fa-solid fa-lock');
                 return;
             }
 
@@ -1101,19 +1173,19 @@
                            globalState.pendingUsers.some(u => u.username === uInput);
 
             if (exists) {
-                alert('Username already exists or is pending approval.');
+                showToast('Username already exists or is pending approval.', 'fa-solid fa-user-xmark');
                 return;
             }
 
             globalState.pendingUsers.push({ username: uInput, password: pInput, role: 'user' });
             await syncToCloud();
 
-            alert('Registration request submitted! Please wait for Admin approval.');
+            showToast('Registration submitted! Awaiting Admin approval.', 'fa-solid fa-clock');
             closeAuthModal();
         }
 
         function handleLogout() {
-            // CONFIRM LOGOUT FOR ADMIN & USER
+            // CONFIRMATION DIALOG RETAINED ONLY FOR LOGOUT
             if (confirm('Are you sure you want to log out?')) {
                 currentUser = null;
                 localStorage.removeItem('eduDocsSession');
@@ -1121,8 +1193,8 @@
                 renderNavbar();
                 switchView('home-view');
 
-                // LOGOUT SUCCESS POPUP
-                alert('Successfully logged out!');
+                // AUTO-CLOSING LOGOUT POPUP (NO OK NEEDED)
+                showToast('Successfully logged out!', 'fa-solid fa-right-from-bracket');
             }
         }
     </script>
