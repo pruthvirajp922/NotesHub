@@ -697,17 +697,23 @@
 
         async function syncFromCloud() {
             try {
-                const res = await fetch(JSON_BIN_URL);
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data && typeof data === 'object') {
-                        globalState.registeredUsers = data.registeredUsers || globalState.registeredUsers;
-                        globalState.pendingUsers = data.pendingUsers || [];
-                        globalState.pendingProfileEdits = data.pendingProfileEdits || [];
-                        if (data.eduNotesCatalog && data.eduNotesCatalog.length > 0) {
-                            globalState.eduNotesCatalog = data.eduNotesCatalog;
-                        }
-                    }
+                const response = await fetch(`${JSONBIN_URL}/latest`, {
+                    method: 'GET',
+                    headers: { 'X-Master-Key': API_KEY }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    globalState = data.record || {};
+                    
+                    // Ensure all array properties exist so .push() never fails
+                    if (!Array.isArray(globalState.registeredUsers)) globalState.registeredUsers = [];
+                    if (!Array.isArray(globalState.pendingUsers)) globalState.pendingUsers = [];
+                    if (!Array.isArray(globalState.eduNotesCatalog)) globalState.eduNotesCatalog = [];
+                }
+            } catch (error) {
+                console.error("Failed to load cloud state:", error);
+            }
+        }
                 }
             } catch (err) {
                 console.warn('Cloud sync offline. Using local memory state.');
@@ -969,11 +975,31 @@
             `).join('');
         }
 
-        async function approveUserRegistration(index) {
-            const approved = globalState.pendingUsers.splice(index, 1)[0];
-            globalState.registeredUsers.push(approved);
+        async function approveUser(index) {
+            if (!globalState.registeredUsers) globalState.registeredUsers = [];
+            if (!globalState.pendingUsers) globalState.pendingUsers = [];
+
+            const user = globalState.pendingUsers[index];
+            if (user) {
+                globalState.registeredUsers.push(user);
+                globalState.pendingUsers.splice(index, 1);
+                await syncToCloud();
+                renderAdminData();
+            }
+        }
+
+        async function rejectUser(index) {
+            if (!globalState.pendingUsers) globalState.pendingUsers = [];
+            globalState.pendingUsers.splice(index, 1);
             await syncToCloud();
-            renderAdminPortal();
+            renderAdminData();
+        }
+
+        async function revokeUser(index) {
+            if (!globalState.registeredUsers) globalState.registeredUsers = [];
+            globalState.registeredUsers.splice(index, 1);
+            await syncToCloud();
+            renderAdminData();
         }
 
         async function rejectUserRegistration(index) {
