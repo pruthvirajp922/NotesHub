@@ -631,29 +631,42 @@
 
         let globalState = {
             registeredUsers: [
-                { username: 'Patil', password: '123', role: 'admin' },
-                { username: 'Alex', password: 'user123', role: 'user' }
+                { username: 'Patil', password: 'abc@123', role: 'admin' },
             ],
             pendingUsers: [],
             pendingProfileEdits: [],
-            eduNotesCatalog: [
-                { id: '1', name: 'Class 10 S & T Part 1 .pdf', category: 'Science', url: 'Class 10 S & T Part 1 .pdf' },
-                { id: '2', name: 'Class 10 S & T Part 2 .pdf', category: 'Science', url: 'Class 10 S & T Part 2 .pdf' },
-                { id: '3', name: 'Geography notes.pdf', category: 'Social Science', url: 'Geography notes.pdf' },
-                { id: '4', name: 'History Notes .pdf', category: 'History', url: 'History Notes .pdf' },
-                { id: '5', name: 'Short Science 1 Notes.pdf', category: 'Science', url: 'Short Science 1 Notes.pdf' },
-                { id: '6', name: 'Short Science 2 notes.pdf', category: 'Science', url: 'Short Science 2 notes.pdf' },
-                { id: '7', name: 'Geography short notes.pdf', category: 'Social Science', url: 'Geography short notes.pdf' },
-                { id: '8', name: 'History short notes.pdf', category: 'History', url: 'History short notes.pdf' },
-                { id: '9', name: 'Science 1 short notes.pdf', category: 'Science', url: 'Science 1 short notes.pdf' },
-                { id: '10', name: 'Science 1 mind maps.pdf', category: 'Science', url: 'Science 1 mind maps.pdf' },
-                { id: '11', name: 'Science 2 short notes.pdf', category: 'Science', url: 'Science 2 short notes.pdf' },
-                { id: '12', name: 'Science 2 mind maps.pdf', category: 'Science', url: 'Science 2 mind maps.pdf' },
-                { id: '13', name: 'Math 1 short notes.pdf', category: 'Mathematics', url: 'Math 1 short notes.pdf' },
-                { id: '14', name: 'Math 1 mind map.pdf', category: 'Mathematics', url: 'Math 1 mind map.pdf' },
-                { id: '15', name: 'Math 2 short notes.pdf', category: 'Mathematics', url: 'Math 2 short notes.pdf' },
-                { id: '16', name: 'Math 2 mind map.pdf', category: 'Mathematics', url: 'Math 2 mind map.pdf' }
-            ]
+           eduNotesCatalog: [
+    // -----------------------------------------------------------------
+    // CATEGORY 1: DETAILED NOTES
+    // (Files that do NOT contain "short notes" or "mind map/maps")
+    // -----------------------------------------------------------------
+    { id: '1', name: 'Science 1 Detailed Notes', category: 'Detailed Notes', url: 'Class 10 S & T Part 1 .pdf' },
+    { id: '2', name: 'Science 2 Detailed Notes', category: 'Detailed Notes', url: 'Class 10 S & T Part 2 .pdf' },
+    { id: '3', name: 'Geography Detailed Notes', category: 'Detailed Notes', url: 'Geography notes.pdf' },
+    { id: '4', name: 'History Detailed Notes', category: 'Detailed Notes', url: 'History Notes .pdf' },
+
+    // -----------------------------------------------------------------
+    // CATEGORY 2: SHORT NOTES
+    // (Files that contain "short notes")
+    // -----------------------------------------------------------------
+    { id: '5', name: 'Science 1 Short Notes', category: 'Short Notes', url: 'Short Science 1 Notes.pdf' },
+    { id: '6', name: 'Science 2 Short Notes', category: 'Short Notes', url: 'Short Science 2 notes.pdf' },
+    { id: '7', name: 'Geography Short Notes', category: 'Short Notes', url: 'Geography short notes.pdf' },
+    { id: '8', name: 'History Short Notes', category: 'Short Notes', url: 'History short notes.pdf' },
+    { id: '9', name: 'Science 1 Short Notes', category: 'Short Notes', url: 'Science 1 short notes.pdf' },
+    { id: '10', name: 'Science 2 Short Notes', category: 'Short Notes', url: 'Science 2 short notes.pdf' },
+    { id: '11', name: 'Math 1 Short Notes', category: 'Short Notes', url: 'Math 1 short notes.pdf' },
+    { id: '12', name: 'Math 2 Short Notes', category: 'Short Notes', url: 'Math 2 short notes.pdf' },
+
+    // -----------------------------------------------------------------
+    // CATEGORY 3: MIND MAPS
+    // (Files that contain "mind map" or "mind maps" - names kept as-is)
+    // -----------------------------------------------------------------
+    { id: '13', name: 'Science 1 mind maps.pdf', category: 'Mind Maps', url: 'Science 1 mind maps.pdf' },
+    { id: '14', name: 'Science 2 mind maps.pdf', category: 'Mind Maps', url: 'Science 2 mind maps.pdf' },
+    { id: '15', name: 'Math 1 mind map.pdf', category: 'Mind Maps', url: 'Math 1 mind map.pdf' },
+    { id: '16', name: 'Math 2 mind map.pdf', category: 'Mind Maps', url: 'Math 2 mind map.pdf' }
+]
         };
 
         let currentUser = null;
