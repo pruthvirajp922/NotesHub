@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduDocs Portal - Fixed PDF Downloads</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EduDocs Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -30,6 +30,7 @@
             margin: 0;
             padding: 0;
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -40,7 +41,7 @@
             padding-bottom: 60px;
         }
 
-        /* Header / Navbar */
+        /* Header / Navbar (Auto-Adapts for Mobile) */
         header {
             position: sticky;
             top: 0;
@@ -48,17 +49,19 @@
             background: rgba(13, 17, 23, 0.85);
             backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--glass-border);
-            padding: 16px 5%;
+            padding: 14px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .brand {
             display: flex;
             align-items: center;
-            gap: 12px;
-            font-size: 1.35rem;
+            gap: 10px;
+            font-size: 1.25rem;
             font-weight: 800;
             background: var(--accent-gradient);
             -webkit-background-clip: text;
@@ -69,12 +72,13 @@
         .nav-actions {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
-        /* Buttons */
+        /* Responsive Buttons */
         .btn {
-            padding: 10px 20px;
+            padding: 10px 18px;
             border-radius: var(--radius-md);
             border: 1px solid transparent;
             font-size: 0.88rem;
@@ -83,58 +87,34 @@
             transition: var(--transition);
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             color: #fff;
             text-decoration: none;
+            min-height: 42px;
         }
 
-        .btn-primary {
-            background: var(--accent-gradient);
-            box-shadow: 0 4px 15px rgba(56, 139, 253, 0.3);
-        }
-
-        .btn-primary:hover {
-            opacity: 0.92;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(56, 139, 253, 0.4);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.06);
-            border-color: var(--glass-border);
-            color: var(--text-main);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.12);
-        }
-
-        .btn-success {
-            background: var(--success-gradient);
-        }
-
-        .btn-danger {
-            background: var(--danger-gradient);
-        }
-
-        .btn-warning {
-            background: var(--warning-gradient);
-            color: #fff;
-        }
+        .btn-primary { background: var(--accent-gradient); box-shadow: 0 4px 15px rgba(56, 139, 253, 0.3); }
+        .btn-primary:hover { opacity: 0.92; transform: translateY(-2px); }
+        .btn-secondary { background: rgba(255, 255, 255, 0.06); border-color: var(--glass-border); color: var(--text-main); }
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.12); }
+        .btn-success { background: var(--success-gradient); }
+        .btn-danger { background: var(--danger-gradient); }
+        .btn-warning { background: var(--warning-gradient); color: #fff; }
 
         /* Main Container */
         .container {
             max-width: 1280px;
-            margin: 35px auto 0;
-            padding: 0 20px;
+            margin: 25px auto 0;
+            padding: 0 16px;
         }
 
-        /* Glass Cards */
+        /* Cards */
         .glass-card {
             background: var(--card-bg);
             border: 1px solid var(--glass-border);
             border-radius: var(--radius-lg);
-            padding: 28px;
+            padding: 24px;
             backdrop-filter: blur(12px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
             margin-bottom: 25px;
@@ -144,63 +124,64 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
             margin-bottom: 22px;
             padding-bottom: 14px;
             border-bottom: 1px solid var(--glass-border);
         }
 
         .section-title {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             font-weight: 700;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        /* Grid Layouts */
+        /* Grid Layout (Desktop to Mobile Responsive) */
         .notes-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-            gap: 22px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 18px;
         }
 
         .note-card {
             background: var(--card-bg);
             border: 1px solid var(--glass-border);
             border-radius: var(--radius-md);
-            padding: 22px;
+            padding: 20px;
             transition: var(--transition);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            position: relative;
         }
 
         .note-card:hover {
             background: var(--card-hover-bg);
-            transform: translateY(-4px);
+            transform: translateY(-3px);
             border-color: var(--accent-primary);
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5);
         }
 
         .note-title {
-            font-size: 1.05rem;
+            font-size: 1rem;
             font-weight: 700;
             margin-bottom: 8px;
             color: #fff;
+            word-break: break-word;
         }
 
         .note-meta {
             font-size: 0.8rem;
             color: var(--text-muted);
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             display: flex;
             gap: 12px;
         }
 
         /* Inputs & Forms */
         .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
 
         .form-group label {
@@ -227,7 +208,59 @@
 
         .form-control:focus {
             border-color: var(--accent-primary);
-            box-shadow: 0 0 12px rgba(88, 166, 255, 0.25);
+            box-shadow: 0 0 12px rgba(88, 166, 253, 0.25);
+        }
+
+        /* GOOGLE-STYLE PASSWORD STRENGTH METER */
+        .strength-bar-container {
+            height: 6px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin-top: 8px;
+            overflow: hidden;
+            display: flex;
+            gap: 4px;
+        }
+
+        .strength-segment {
+            height: 100%;
+            flex: 1;
+            background: transparent;
+            transition: background 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .strength-text {
+            font-size: 0.78rem;
+            margin-top: 6px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-muted);
+        }
+
+        .strength-rules {
+            margin-top: 10px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+
+        .rule-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .rule-item.valid {
+            color: #3fb950;
+        }
+
+        .rule-item.valid i::before {
+            content: "\f00c";
         }
 
         /* Tables */
@@ -235,33 +268,30 @@
             overflow-x: auto;
             border-radius: var(--radius-md);
             border: 1px solid var(--glass-border);
+            -webkit-overflow-scrolling: touch;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             text-align: left;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
+            min-width: 500px;
         }
 
         th {
             background: rgba(13, 17, 23, 0.9);
-            padding: 16px 20px;
+            padding: 14px 16px;
             color: var(--text-muted);
             font-weight: 600;
             text-transform: uppercase;
-            font-size: 0.78rem;
-            letter-spacing: 0.5px;
+            font-size: 0.75rem;
         }
 
         td {
-            padding: 16px 20px;
+            padding: 14px 16px;
             border-top: 1px solid var(--glass-border);
             background: rgba(22, 27, 34, 0.4);
-        }
-
-        tr:hover td {
-            background: rgba(30, 37, 48, 0.6);
         }
 
         /* Badges */
@@ -269,26 +299,26 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 4px 12px;
+            padding: 4px 10px;
             border-radius: 50px;
-            font-size: 0.78rem;
+            font-size: 0.75rem;
             font-weight: 600;
         }
 
         .badge-success { background: rgba(35, 134, 54, 0.2); color: #3fb950; border: 1px solid rgba(63, 185, 80, 0.3); }
         .badge-warning { background: rgba(210, 153, 34, 0.2); color: #d29922; border: 1px solid rgba(210, 153, 34, 0.3); }
 
-        /* Modal */
+        /* Modal Overlay */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             backdrop-filter: blur(8px);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            padding: 20px;
+            padding: 16px;
         }
 
         .modal-overlay.active {
@@ -302,14 +332,16 @@
             border-radius: var(--radius-lg);
             width: 100%;
             max-width: 440px;
-            padding: 32px;
+            padding: 28px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.6);
             position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .modal-close {
             position: absolute;
-            top: 20px; right: 20px;
+            top: 18px; right: 18px;
             background: none;
             border: none;
             color: var(--text-muted);
@@ -317,17 +349,16 @@
             cursor: pointer;
         }
 
-        /* Banner Notice */
         .notice-banner {
             background: rgba(56, 139, 253, 0.1);
             border: 1px solid rgba(56, 139, 253, 0.3);
             border-radius: var(--radius-md);
-            padding: 14px 20px;
-            margin-bottom: 25px;
+            padding: 12px 18px;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
             gap: 12px;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             color: var(--accent-primary);
         }
 
@@ -336,12 +367,43 @@
             to { opacity: 1; transform: scale(1); }
         }
 
-        .view-section {
-            display: none;
-        }
+        .view-section { display: none; }
+        .view-section.active { display: block; }
 
-        .view-section.active {
-            display: block;
+        /* MOBILE SPECIFIC AUTO-CONVERSION MEDIA QUERIES */
+        @media (max-width: 600px) {
+            header {
+                padding: 12px 16px;
+            }
+            .brand span {
+                font-size: 1.1rem;
+            }
+            .nav-actions {
+                width: 100%;
+                justify-content: space-between;
+                margin-top: 6px;
+            }
+            .nav-actions .btn {
+                flex: 1;
+                font-size: 0.8rem;
+                padding: 8px 10px;
+            }
+            .glass-card {
+                padding: 16px;
+            }
+            .notes-grid {
+                grid-template-columns: 1fr;
+            }
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .section-header > div {
+                width: 100% !important;
+            }
+            .strength-rules {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -354,9 +416,9 @@
         </div>
         <div class="nav-actions">
             <button class="btn btn-secondary" onclick="switchView('home-view')">
-                <i class="fa-solid fa-book-open"></i> Notes Catalog
+                <i class="fa-solid fa-book-open"></i> Notes
             </button>
-            <div id="auth-buttons-container">
+            <div id="auth-buttons-container" style="display: flex; gap: 8px; flex: 1;">
                 </div>
         </div>
     </header>
@@ -365,16 +427,16 @@
 
         <div id="visitor-notice" class="notice-banner">
             <i class="fa-solid fa-circle-info fa-lg"></i>
-            <span><strong>Guest Access:</strong> You are currently viewing all uploaded study materials. Please <strong>Log In</strong> to download files.</span>
+            <span><strong>Guest Access:</strong> Viewing materials. Please <strong>Log In</strong> to download files.</span>
         </div>
 
         <section id="home-view" class="view-section active">
             <div class="glass-card">
                 <div class="section-header">
                     <div class="section-title">
-                        <i class="fa-solid fa-folder-open text-primary"></i> Available Study Materials & Notes
+                        <i class="fa-solid fa-folder-open text-primary"></i> Study Materials & Notes
                     </div>
-                    <div style="max-width: 300px; width: 100%;">
+                    <div style="max-width: 320px; width: 100%;">
                         <input type="text" class="form-control" id="search-notes-input" placeholder="Search notes..." onkeyup="filterNotes()">
                     </div>
                 </div>
@@ -386,7 +448,7 @@
 
 
         <section id="profile-view" class="view-section">
-            <div class="glass-card" style="max-width: 600px; margin: 0 auto;">
+            <div class="glass-card" style="max-width: 550px; margin: 0 auto;">
                 <div class="section-header">
                     <div class="section-title">
                         <i class="fa-solid fa-user-gear text-primary"></i> Edit Profile Request
@@ -394,11 +456,11 @@
                     <span id="user-status-tag" class="badge badge-success">Active</span>
                 </div>
 
-                <div style="background: rgba(255,255,255,0.03); border-radius: var(--radius-md); padding: 18px; margin-bottom: 22px; display: flex; align-items: center; gap: 16px;">
-                    <i class="fa-solid fa-circle-user fa-3x" style="color: var(--accent-primary);"></i>
+                <div style="background: rgba(255,255,255,0.03); border-radius: var(--radius-md); padding: 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 14px;">
+                    <i class="fa-solid fa-circle-user fa-2xl" style="color: var(--accent-primary);"></i>
                     <div>
-                        <h4 id="profile-display-username" style="font-size: 1.1rem; font-weight: 700;">-</h4>
-                        <p style="font-size: 0.82rem; color: var(--text-muted);">Standard Student Account</p>
+                        <h4 id="profile-display-username" style="font-size: 1.05rem; font-weight: 700;">-</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Standard Student Account</p>
                     </div>
                 </div>
 
@@ -413,7 +475,7 @@
                         <input type="password" id="edit-password-input" class="form-control" placeholder="Leave blank to keep existing password">
                     </div>
 
-                    <div style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 20px;">
+                    <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 20px;">
                         <i class="fa-solid fa-clock-rotate-left me-1"></i> Profile edits require Admin approval before updating live.
                     </div>
 
@@ -430,7 +492,7 @@
             <div class="glass-card">
                 <div class="section-header">
                     <div class="section-title" style="color: #d29922;">
-                        <i class="fa-solid fa-user-clock"></i> Pending Registration & Login Requests
+                        <i class="fa-solid fa-user-clock"></i> Pending Registration Requests
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -442,8 +504,7 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody id="admin-pending-users-tbody">
-                            </tbody>
+                        <tbody id="admin-pending-users-tbody"></tbody>
                     </table>
                 </div>
             </div>
@@ -458,14 +519,13 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Current Username</th>
-                                <th>Requested Username</th>
-                                <th>Requested Password</th>
+                                <th>Current</th>
+                                <th>Requested New</th>
+                                <th>New Password</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody id="admin-pending-edits-tbody">
-                            </tbody>
+                        <tbody id="admin-pending-edits-tbody"></tbody>
                     </table>
                 </div>
             </div>
@@ -473,7 +533,7 @@
             <div class="glass-card">
                 <div class="section-header">
                     <div class="section-title">
-                        <i class="fa-solid fa-users-gear text-primary"></i> Active Registered Users & Credentials
+                        <i class="fa-solid fa-users-gear text-primary"></i> Active Registered Users
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -481,13 +541,12 @@
                         <thead>
                             <tr>
                                 <th>Username</th>
-                                <th>Password (Admin View)</th>
+                                <th>Password</th>
                                 <th>Role</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody id="admin-active-users-tbody">
-                            </tbody>
+                        <tbody id="admin-active-users-tbody"></tbody>
                     </table>
                 </div>
             </div>
@@ -502,8 +561,8 @@
             <button class="modal-close" onclick="closeAuthModal()"><i class="fa-solid fa-xmark"></i></button>
             
             <div id="login-form-wrapper">
-                <h3 style="margin-bottom: 8px; font-weight: 700;">Account Login</h3>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 22px;" id="login-modal-subtext">Sign in to download notes and manage your account.</p>
+                <h3 style="margin-bottom: 6px; font-weight: 700;">Account Login</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;" id="login-modal-subtext">Sign in to download notes and manage your account.</p>
 
                 <form onsubmit="handleLoginSubmit(event)">
                     <div class="form-group">
@@ -518,14 +577,14 @@
                         <i class="fa-solid fa-right-to-bracket"></i> Log In
                     </button>
                 </form>
-                <div style="text-align: center; margin-top: 18px; font-size: 0.85rem; color: var(--text-muted);">
-                    Don't have an account? <a href="#" style="color: var(--accent-primary);" onclick="toggleAuthForm('signup')">Request Account</a>
+                <div style="text-align: center; margin-top: 16px; font-size: 0.85rem; color: var(--text-muted);">
+                    Don't have an account? <a href="#" style="color: var(--accent-primary);" onclick="toggleAuthForm('signup')">Create Account</a>
                 </div>
             </div>
 
             <div id="signup-form-wrapper" style="display: none;">
-                <h3 style="margin-bottom: 8px; font-weight: 700;">Request New Account</h3>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 22px;">Registration requires approval from the Administrator.</p>
+                <h3 style="margin-bottom: 6px; font-weight: 700;">Create Account</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Use a strong password to protect your account.</p>
 
                 <form onsubmit="handleSignupSubmit(event)">
                     <div class="form-group">
@@ -534,13 +593,31 @@
                     </div>
                     <div class="form-group">
                         <label>Choose Password</label>
-                        <input type="password" id="signup-password" class="form-control" required placeholder="Choose a password">
+                        <input type="password" id="signup-password" class="form-control" required placeholder="Enter strong password" oninput="checkPasswordStrength(this.value)">
+                        
+                        <div class="strength-bar-container">
+                            <div class="strength-segment" id="seg-1"></div>
+                            <div class="strength-segment" id="seg-2"></div>
+                            <div class="strength-segment" id="seg-3"></div>
+                            <div class="strength-segment" id="seg-4"></div>
+                        </div>
+                        <div class="strength-text">
+                            <span>Password Strength:</span>
+                            <span id="strength-label" style="font-weight: 700;">Too Short</span>
+                        </div>
+
+                        <div class="strength-rules">
+                            <div class="rule-item" id="rule-length"><i class="fa-regular fa-circle"></i> At least 8 characters</div>
+                            <div class="rule-item" id="rule-number"><i class="fa-regular fa-circle"></i> At least 1 number</div>
+                            <div class="rule-item" id="rule-upper"><i class="fa-regular fa-circle"></i> Uppercase letter</div>
+                            <div class="rule-item" id="rule-symbol"><i class="fa-regular fa-circle"></i> Special character (@#$)</div>
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-success" style="width: 100%; justify-content: center; margin-top: 10px;">
+                    <button type="submit" id="signup-submit-btn" class="btn btn-success" style="width: 100%; justify-content: center; margin-top: 14px;">
                         <i class="fa-solid fa-user-plus"></i> Submit Registration
                     </button>
                 </form>
-                <div style="text-align: center; margin-top: 18px; font-size: 0.85rem; color: var(--text-muted);">
+                <div style="text-align: center; margin-top: 16px; font-size: 0.85rem; color: var(--text-muted);">
                     Already have an account? <a href="#" style="color: var(--accent-primary);" onclick="toggleAuthForm('login')">Log In</a>
                 </div>
             </div>
@@ -552,37 +629,35 @@
     <script>
         const JSON_BIN_URL = 'https://api.npoint.io/088d8b671a5bdff0e7cb';
 
-        // EXACT FILE NAMES MATCHING YOUR UPLOADED DOCUMENTS
         let globalState = {
             registeredUsers: [
-                { username: 'Patil', password: 'abc@12345', role: 'admin' },
+                { username: 'Patil', password: '123', role: 'admin' },
+                { username: 'Alex', password: 'user123', role: 'user' }
             ],
             pendingUsers: [],
             pendingProfileEdits: [],
             eduNotesCatalog: [
-    // Original Documents
-    { id: '1', name: 'Class 10 S & T Part 1 .pdf', category: 'Science', url: 'Class 10 S & T Part 1 .pdf' },
-    { id: '2', name: 'Class 10 S & T Part 2 .pdf', category: 'Science', url: 'Class 10 S & T Part 2 .pdf' },
-    { id: '3', name: 'Geography notes.pdf', category: 'Social Science', url: 'Geography notes.pdf' },
-    { id: '4', name: 'History Notes .pdf', category: 'History', url: 'History Notes .pdf' },
-    { id: '5', name: 'Short Science 1 Notes.pdf', category: 'Science', url: 'Short Science 1 Notes.pdf' },
-    { id: '6', name: 'Short Science 2 notes.pdf', category: 'Science', url: 'Short Science 2 notes.pdf' },
-
-    // Newly Added Short Notes & Mind Maps
-    { id: '7', name: 'Geography short notes.pdf', category: 'Social Science', url: 'Geography short notes.pdf' },
-    { id: '8', name: 'History short notes.pdf', category: 'History', url: 'History short notes.pdf' },
-    { id: '9', name: 'Science 1 short notes.pdf', category: 'Science', url: 'Science 1 short notes.pdf' },
-    { id: '10', name: 'Science 1 mind maps.pdf', category: 'Science', url: 'Science 1 mind maps.pdf' },
-    { id: '11', name: 'Science 2 short notes.pdf', category: 'Science', url: 'Science 2 short notes.pdf' },
-    { id: '12', name: 'Science 2 mind maps.pdf', category: 'Science', url: 'Science 2 mind maps.pdf' },
-    { id: '13', name: 'Math 1 short notes.pdf', category: 'Mathematics', url: 'Math 1 short notes.pdf' },
-    { id: '14', name: 'Math 1 mind map.pdf', category: 'Mathematics', url: 'Math 1 mind map.pdf' },
-    { id: '15', name: 'Math 2 short notes.pdf', category: 'Mathematics', url: 'Math 2 short notes.pdf' },
-    { id: '16', name: 'Math 2 mind map.pdf', category: 'Mathematics', url: 'Math 2 mind map.pdf' }
-]
+                { id: '1', name: 'Class 10 S & T Part 1 .pdf', category: 'Science', url: 'Class 10 S & T Part 1 .pdf' },
+                { id: '2', name: 'Class 10 S & T Part 2 .pdf', category: 'Science', url: 'Class 10 S & T Part 2 .pdf' },
+                { id: '3', name: 'Geography notes.pdf', category: 'Social Science', url: 'Geography notes.pdf' },
+                { id: '4', name: 'History Notes .pdf', category: 'History', url: 'History Notes .pdf' },
+                { id: '5', name: 'Short Science 1 Notes.pdf', category: 'Science', url: 'Short Science 1 Notes.pdf' },
+                { id: '6', name: 'Short Science 2 notes.pdf', category: 'Science', url: 'Short Science 2 notes.pdf' },
+                { id: '7', name: 'Geography short notes.pdf', category: 'Social Science', url: 'Geography short notes.pdf' },
+                { id: '8', name: 'History short notes.pdf', category: 'History', url: 'History short notes.pdf' },
+                { id: '9', name: 'Science 1 short notes.pdf', category: 'Science', url: 'Science 1 short notes.pdf' },
+                { id: '10', name: 'Science 1 mind maps.pdf', category: 'Science', url: 'Science 1 mind maps.pdf' },
+                { id: '11', name: 'Science 2 short notes.pdf', category: 'Science', url: 'Science 2 short notes.pdf' },
+                { id: '12', name: 'Science 2 mind maps.pdf', category: 'Science', url: 'Science 2 mind maps.pdf' },
+                { id: '13', name: 'Math 1 short notes.pdf', category: 'Mathematics', url: 'Math 1 short notes.pdf' },
+                { id: '14', name: 'Math 1 mind map.pdf', category: 'Mathematics', url: 'Math 1 mind map.pdf' },
+                { id: '15', name: 'Math 2 short notes.pdf', category: 'Mathematics', url: 'Math 2 short notes.pdf' },
+                { id: '16', name: 'Math 2 mind map.pdf', category: 'Mathematics', url: 'Math 2 mind map.pdf' }
+            ]
         };
 
         let currentUser = null;
+        let isPasswordStrongEnough = false;
 
         window.onload = async function() {
             await syncFromCloud();
@@ -600,7 +675,6 @@
                         globalState.registeredUsers = data.registeredUsers || globalState.registeredUsers;
                         globalState.pendingUsers = data.pendingUsers || [];
                         globalState.pendingProfileEdits = data.pendingProfileEdits || [];
-                        // Keep current catalog names intact
                         if (data.eduNotesCatalog && data.eduNotesCatalog.length > 0) {
                             globalState.eduNotesCatalog = data.eduNotesCatalog;
                         }
@@ -627,13 +701,9 @@
             document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
 
-            if (viewId === 'home-view') {
-                renderNotes();
-            } else if (viewId === 'profile-view') {
-                renderProfileView();
-            } else if (viewId === 'admin-view') {
-                renderAdminPortal();
-            }
+            if (viewId === 'home-view') renderNotes();
+            else if (viewId === 'profile-view') renderProfileView();
+            else if (viewId === 'admin-view') renderAdminPortal();
         }
 
         function renderNavbar() {
@@ -643,7 +713,7 @@
             if (!currentUser) {
                 notice.style.display = 'flex';
                 container.innerHTML = `
-                    <button class="btn btn-primary" onclick="openAuthModal('login')">
+                    <button class="btn btn-primary" style="width:100%;" onclick="openAuthModal('login')">
                         <i class="fa-solid fa-right-to-bracket"></i> Log In / Register
                     </button>
                 `;
@@ -652,10 +722,10 @@
                 if (currentUser.username === 'Patil' || currentUser.role === 'admin') {
                     container.innerHTML = `
                         <button class="btn btn-warning" onclick="switchView('admin-view')">
-                            <i class="fa-solid fa-shield-halved"></i> Admin Portal
+                            <i class="fa-solid fa-shield-halved"></i> Admin
                         </button>
                         <button class="btn btn-secondary" onclick="handleLogout()">
-                            <i class="fa-solid fa-power-off"></i> Logout
+                            <i class="fa-solid fa-power-off"></i>
                         </button>
                     `;
                 } else {
@@ -664,7 +734,7 @@
                             <i class="fa-solid fa-circle-user"></i> ${currentUser.username}
                         </button>
                         <button class="btn btn-secondary" onclick="handleLogout()">
-                            <i class="fa-solid fa-power-off"></i> Logout
+                            <i class="fa-solid fa-power-off"></i>
                         </button>
                     `;
                 }
@@ -688,7 +758,7 @@
                         </div>
                         <div class="note-title">${note.name}</div>
                     </div>
-                    <div style="margin-top: 18px;">
+                    <div style="margin-top: 16px;">
                         <button class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="handleDownloadNote('${note.name.replace(/'/g, "\\'")}', '${note.url}')">
                             <i class="fa-solid fa-download"></i> Download PDF
                         </button>
@@ -702,7 +772,6 @@
             renderNotes(query);
         }
 
-        // Action: Enforces Login & Triggers Real PDF File Download
         function handleDownloadNote(fileName, url) {
             if (!currentUser) {
                 openAuthModal('login', 'Please log in to your account to download notes.');
@@ -710,15 +779,79 @@
             }
 
             const downloadUrl = (url && url !== '#') ? url : fileName;
-
             const link = document.createElement('a');
-            link.href = downloadUrl;
+            link.href = encodeURIComponent(downloadUrl);
             link.target = '_blank';
             link.download = fileName;
-            
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+        }
+
+        /* GOOGLE-STYLE PASSWORD STRENGTH EVALUATOR */
+        function checkPasswordStrength(password) {
+            const lengthValid = password.length >= 8;
+            const numberValid = /\d/.test(password);
+            const upperValid = /[A-Z]/.test(password);
+            const symbolValid = /[^A-Za-z0-9]/.test(password);
+
+            // Update UI Checklist Items
+            updateRuleUI('rule-length', lengthValid);
+            updateRuleUI('rule-number', numberValid);
+            updateRuleUI('rule-upper', upperValid);
+            updateRuleUI('rule-symbol', symbolValid);
+
+            let score = 0;
+            if (lengthValid) score++;
+            if (numberValid) score++;
+            if (upperValid) score++;
+            if (symbolValid) score++;
+
+            const segs = [document.getElementById('seg-1'), document.getElementById('seg-2'), document.getElementById('seg-3'), document.getElementById('seg-4')];
+            const label = document.getElementById('strength-label');
+
+            segs.forEach(s => s.style.background = 'transparent');
+
+            if (password.length === 0) {
+                label.innerText = 'Too Short';
+                label.style.color = 'var(--text-muted)';
+                isPasswordStrongEnough = false;
+                return;
+            }
+
+            if (score === 1) {
+                segs[0].style.background = '#f85149';
+                label.innerText = 'Weak';
+                label.style.color = '#f85149';
+                isPasswordStrongEnough = false;
+            } else if (score === 2) {
+                segs[0].style.background = '#d29922';
+                segs[1].style.background = '#d29922';
+                label.innerText = 'Fair';
+                label.style.color = '#d29922';
+                isPasswordStrongEnough = false;
+            } else if (score === 3) {
+                segs[0].style.background = '#58a6ff';
+                segs[1].style.background = '#58a6ff';
+                segs[2].style.background = '#58a6ff';
+                label.innerText = 'Good';
+                label.style.color = '#58a6ff';
+                isPasswordStrongEnough = true;
+            } else if (score === 4) {
+                segs.forEach(s => s.style.background = '#3fb950');
+                label.innerText = 'Strong (Google standard)';
+                label.style.color = '#3fb950';
+                isPasswordStrongEnough = true;
+            }
+        }
+
+        function updateRuleUI(elementId, isValid) {
+            const el = document.getElementById(elementId);
+            if (isValid) {
+                el.classList.add('valid');
+            } else {
+                el.classList.remove('valid');
+            }
         }
 
         function renderProfileView() {
@@ -747,7 +880,6 @@
             if (!newUsername) return;
 
             globalState.pendingProfileEdits = globalState.pendingProfileEdits.filter(p => p.originalUsername !== currentUser.username);
-
             globalState.pendingProfileEdits.push({
                 originalUsername: currentUser.username,
                 requestedUsername: newUsername,
@@ -769,12 +901,8 @@
                         <td><strong>${u.username}</strong></td>
                         <td>${u.role || 'user'}</td>
                         <td>
-                            <button class="btn btn-success" style="padding: 6px 12px; font-size: 0.8rem;" onclick="approveUserRegistration(${index})">
-                                <i class="fa-solid fa-check"></i> Approve
-                            </button>
-                            <button class="btn btn-danger" style="padding: 6px 12px; font-size: 0.8rem;" onclick="rejectUserRegistration(${index})">
-                                <i class="fa-solid fa-xmark"></i> Reject
-                            </button>
+                            <button class="btn btn-success" style="padding: 4px 8px; font-size: 0.75rem;" onclick="approveUserRegistration(${index})">Approve</button>
+                            <button class="btn btn-danger" style="padding: 4px 8px; font-size: 0.75rem;" onclick="rejectUserRegistration(${index})">Reject</button>
                         </td>
                     </tr>
                 `).join('');
@@ -790,12 +918,8 @@
                         <td style="color: var(--accent-primary);">${e.requestedUsername}</td>
                         <td style="font-family: monospace;">${e.requestedPassword ? e.requestedPassword : '(Unchanged)'}</td>
                         <td>
-                            <button class="btn btn-success" style="padding: 6px 12px; font-size: 0.8rem;" onclick="approveProfileEdit(${index})">
-                                <i class="fa-solid fa-check"></i> Approve
-                            </button>
-                            <button class="btn btn-danger" style="padding: 6px 12px; font-size: 0.8rem;" onclick="rejectProfileEdit(${index})">
-                                <i class="fa-solid fa-xmark"></i> Reject
-                            </button>
+                            <button class="btn btn-success" style="padding: 4px 8px; font-size: 0.75rem;" onclick="approveProfileEdit(${index})">Approve</button>
+                            <button class="btn btn-danger" style="padding: 4px 8px; font-size: 0.75rem;" onclick="rejectProfileEdit(${index})">Reject</button>
                         </td>
                     </tr>
                 `).join('');
@@ -805,14 +929,12 @@
             activeBody.innerHTML = globalState.registeredUsers.map((u, index) => `
                 <tr>
                     <td><strong>${u.username}</strong></td>
-                    <td style="font-family: monospace; letter-spacing: 1px;">${u.password}</td>
+                    <td style="font-family: monospace;">${u.password}</td>
                     <td><span class="badge ${u.role === 'admin' ? 'badge-warning' : 'badge-success'}">${u.role || 'user'}</span></td>
                     <td>
                         ${u.username !== 'Patil' ? `
-                            <button class="btn btn-danger" style="padding: 6px 12px; font-size: 0.8rem;" onclick="removeActiveUser(${index})">
-                                <i class="fa-solid fa-trash-can"></i> Remove
-                            </button>
-                        ` : '<span style="color: var(--text-muted); font-size: 0.8rem;">Master Admin</span>'}
+                            <button class="btn btn-danger" style="padding: 4px 8px; font-size: 0.75rem;" onclick="removeActiveUser(${index})">Remove</button>
+                        ` : '<span style="color: var(--text-muted); font-size: 0.75rem;">Master Admin</span>'}
                     </td>
                 </tr>
             `).join('');
@@ -836,9 +958,7 @@
             const user = globalState.registeredUsers.find(u => u.username === edit.originalUsername);
             if (user) {
                 user.username = edit.requestedUsername;
-                if (edit.requestedPassword) {
-                    user.password = edit.requestedPassword;
-                }
+                if (edit.requestedPassword) user.password = edit.requestedPassword;
                 if (currentUser && currentUser.username === edit.originalUsername) {
                     currentUser.username = user.username;
                     currentUser.password = user.password;
@@ -888,7 +1008,6 @@
             const pInput = document.getElementById('login-password').value.trim();
 
             await syncFromCloud();
-
             const match = globalState.registeredUsers.find(u => u.username === uInput && u.password === pInput);
 
             if (match) {
@@ -902,16 +1021,19 @@
                 }
             } else {
                 const isPending = globalState.pendingUsers.some(u => u.username === uInput);
-                if (isPending) {
-                    alert('Your account is pending approval from the Admin.');
-                } else {
-                    alert('Invalid username or password.');
-                }
+                if (isPending) alert('Your account is pending approval from the Admin.');
+                else alert('Invalid username or password.');
             }
         }
 
         async function handleSignupSubmit(e) {
             e.preventDefault();
+
+            if (!isPasswordStrongEnough) {
+                alert('Please enter a stronger password (at least 8 characters with numbers/symbols) before creating an account.');
+                return;
+            }
+
             const uInput = document.getElementById('signup-username').value.trim();
             const pInput = document.getElementById('signup-password').value.trim();
 
