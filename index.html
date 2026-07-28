@@ -649,8 +649,8 @@
     // CATEGORY 2: SHORT NOTES
     // (Files that contain "short notes")
     // -----------------------------------------------------------------
-    { id: '5', name: 'Science 1 Short Notes', category: 'Short Notes', url: 'Short Science 1 Notes.pdf' },
-    { id: '6', name: 'Science 2 Short Notes', category: 'Short Notes', url: 'Short Science 2 notes.pdf' },
+    { id: '5', name: 'Science 1 Short Notes pdf 2', category: 'Short Notes', url: 'Short Science 1 Notes.pdf' },
+    { id: '6', name: 'Science 2 Short Notes pdf 2', category: 'Short Notes', url: 'Short Science 2 notes.pdf' },
     { id: '7', name: 'Geography Short Notes', category: 'Short Notes', url: 'Geography short notes.pdf' },
     { id: '8', name: 'History Short Notes', category: 'Short Notes', url: 'History short notes.pdf' },
     { id: '9', name: 'Science 1 Short Notes', category: 'Short Notes', url: 'Science 1 short notes.pdf' },
@@ -754,14 +754,55 @@
             }
         }
 
-        function renderNotes(filter = '') {
+       function renderNotes(filter = '') {
             const container = document.getElementById('notes-container');
-            const notes = globalState.eduNotesCatalog.filter(n => n.name.toLowerCase().includes(filter.toLowerCase()));
+            const categories = ['Detailed Notes', 'Short Notes', 'Mind Maps'];
+            
+            const filteredCatalog = (globalState.eduNotesCatalog || []).filter(n => 
+                n.name.toLowerCase().includes(filter.toLowerCase())
+            );
 
-            if (notes.length === 0) {
+            if (filteredCatalog.length === 0) {
                 container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">No study materials found.</div>`;
                 return;
             }
+
+            let htmlOutput = '';
+
+            categories.forEach(categoryName => {
+                const categoryNotes = filteredCatalog.filter(n => n.category === categoryName);
+
+                if (categoryNotes.length > 0) {
+                    htmlOutput += `
+                        <div style="grid-column: 1 / -1; margin-top: 20px; margin-bottom: 10px;">
+                            <h3 style="color: var(--accent-primary); border-bottom: 1px solid var(--glass-border); padding-bottom: 8px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-layer-group"></i> ${categoryName}
+                            </h3>
+                        </div>
+                    `;
+
+                    categoryNotes.forEach(note => {
+                        htmlOutput += `
+                            <div class="note-card">
+                                <div>
+                                    <div class="note-meta">
+                                        <span><i class="fa-solid fa-file-pdf"></i> ${note.category}</span>
+                                    </div>
+                                    <div class="note-title">${note.name}</div>
+                                </div>
+                                <div style="margin-top: 16px;">
+                                    <button class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="handleDownloadNote('${note.name.replace(/'/g, "\\'")}', '${note.url}')">
+                                        <i class="fa-solid fa-download"></i> Download PDF
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+            });
+
+            container.innerHTML = htmlOutput;
+        }
 
             container.innerHTML = notes.map(note => `
                 <div class="note-card">
