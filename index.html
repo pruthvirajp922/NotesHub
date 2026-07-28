@@ -2,30 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EduDocs Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         :root {
-            --bg-gradient: radial-gradient(circle at 50% 0%, #161b2c 0%, #0d1117 70%);
-            --card-bg: rgba(22, 27, 34, 0.7);
-            --card-hover-bg: rgba(30, 37, 48, 0.85);
-            --border-glow: rgba(56, 139, 253, 0.15);
-            --border-standard: rgba(240, 246, 252, 0.1);
+            --bg-gradient: radial-gradient(circle at 50% 0%, #161b2c 0%, #0d1117 80%);
+            --card-bg: rgba(22, 27, 34, 0.75);
+            --card-hover-bg: rgba(30, 37, 48, 0.9);
+            --glass-border: rgba(240, 246, 252, 0.12);
             --text-main: #f0f6fc;
             --text-muted: #8b949e;
             --accent-primary: #58a6ff;
-            --accent-linear: linear-gradient(135deg, #388bfd 0%, #7928ca 100%);
+            --accent-gradient: linear-gradient(135deg, #388bfd 0%, #7928ca 100%);
             --danger-glow: linear-gradient(135deg, #da3633 0%, #f85149 100%);
             --success-glow: linear-gradient(135deg, #238636 0%, #2ea043 100%);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --sidebar-width: 260px;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         body {
@@ -34,150 +34,221 @@
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
-            overflow-x: hidden;
+            flex-direction: column;
         }
 
-        /* App Layout */
-        #app-sidebar {
-            width: var(--sidebar-width);
-            background: rgba(13, 17, 23, 0.8);
-            backdrop-filter: blur(12px);
-            border-right: 1px solid var(--border-standard);
+        /* Navbar */
+        .navbar {
             display: flex;
-            flex-direction: column;
-            padding: 24px 16px;
-            position: fixed;
-            height: 100vh;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 32px;
+            background: rgba(13, 17, 23, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
             z-index: 100;
         }
 
         .brand-logo {
             font-size: 1.25rem;
-            font-weight: 700;
-            color: #fff;
+            font-weight: 800;
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 32px;
-            padding: 0 8px;
+            color: #fff;
+            cursor: pointer;
         }
 
         .brand-logo i {
             color: var(--accent-primary);
-            font-size: 1.5rem;
         }
 
-        .nav-menu {
-            list-style: none;
+        .nav-links {
             display: flex;
-            flex-direction: column;
-            gap: 8px;
-            flex-grow: 1;
+            align-items: center;
+            gap: 20px;
         }
 
-        .nav-item {
-            padding: 12px 16px;
-            border-radius: 8px;
+        .nav-btn {
+            background: transparent;
+            border: none;
             color: var(--text-muted);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 500;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .nav-item:hover, .nav-item.active {
-            background: rgba(56, 139, 253, 0.1);
-            color: var(--accent-primary);
-        }
-
-        .user-profile-section {
-            border-top: 1px solid var(--border-standard);
-            padding-top: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: var(--accent-linear);
-            display: flex;
-            align-items: center;
-            justify-content: center;
             font-weight: 600;
-            color: #fff;
-        }
-
-        #app-content {
-            margin-left: var(--sidebar-width);
-            flex-grow: 1;
-            padding: 32px 40px;
-            max-width: 1400px;
-        }
-
-        /* Glassmorphism Cards */
-        .glass-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        }
-
-        /* Forms & Inputs */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--text-muted);
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
-
-        .input-control {
-            width: 100%;
-            padding: 12px 16px;
-            background: rgba(13, 17, 23, 0.6);
-            border: 1px solid var(--border-standard);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: color 0.2s ease;
+            padding: 8px 12px;
             border-radius: 8px;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            color: var(--accent-primary);
+            background: rgba(56, 139, 253, 0.1);
+        }
+
+        /* Container & Layout */
+        .main-container {
+            max-width: 1280px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 32px 24px;
+            flex-grow: 1;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 20px;
+            background: rgba(22, 27, 34, 0.4);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            backdrop-filter: blur(12px);
+        }
+
+        .hero-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #fff 0%, #8b949e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+            max-width: 600px;
+            margin: 0 auto 24px auto;
+        }
+
+        /* Controls / Search */
+        .controls-bar {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-wrapper {
+            position: relative;
+            flex-grow: 1;
+            max-width: 480px;
+        }
+
+        .search-wrapper i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px 12px 44px;
+            background: rgba(13, 17, 23, 0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
             color: var(--text-main);
             font-size: 0.95rem;
             outline: none;
-            transition: border-color 0.2s ease;
+            transition: border-color 0.2s;
         }
 
-        .input-control:focus {
+        .search-input:focus {
             border-color: var(--accent-primary);
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 8px 16px;
+            background: rgba(22, 27, 34, 0.6);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover, .tab-btn.active {
+            background: var(--accent-primary);
+            color: #fff;
+            border-color: var(--accent-primary);
+        }
+
+        /* Grid & Cards */
+        .notes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .note-card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .note-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(56, 139, 253, 0.4);
+            background: var(--card-hover-bg);
+        }
+
+        .note-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .category-badge {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 12px;
+            background: rgba(56, 139, 253, 0.15);
+            color: var(--accent-primary);
+        }
+
+        .note-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-main);
+            line-height: 1.4;
         }
 
         /* Buttons */
         .btn {
-            padding: 10px 20px;
+            padding: 10px 18px;
             border-radius: 8px;
             border: none;
             font-weight: 600;
+            font-size: 0.875rem;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            font-size: 0.9rem;
             transition: opacity 0.2s ease, transform 0.1s ease;
         }
 
@@ -186,8 +257,13 @@
         }
 
         .btn-primary {
-            background: var(--accent-linear);
+            background: var(--accent-gradient);
             color: #fff;
+        }
+
+        .btn-secondary {
+            background: rgba(240, 246, 252, 0.1);
+            color: var(--text-main);
         }
 
         .btn-danger {
@@ -200,107 +276,196 @@
             color: #fff;
         }
 
-        .btn-secondary {
-            background: rgba(240, 246, 252, 0.1);
-            color: var(--text-main);
-        }
-
-        /* Grid Structures */
-        .notes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-        }
-
-        .note-card {
-            background: var(--card-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: transform 0.2s ease, border-color 0.2s ease;
-        }
-
-        .note-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(56, 139, 253, 0.4);
-            background: var(--card-hover-bg);
-        }
-
-        .note-title {
-            font-size: 1.1rem;
-            font-weight: 600;
+        /* Section Category Headers */
+        .category-header {
+            grid-column: 1 / -1;
+            margin-top: 24px;
             margin-bottom: 8px;
-            color: var(--text-main);
         }
 
-        .note-meta {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-bottom: 16px;
+        .category-header h3 {
+            color: var(--accent-primary);
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 8px;
+            font-size: 1.15rem;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
-        /* Tables */
+        /* Admin Panels & Tables */
+        .glass-card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
         .data-table {
             width: 100%;
             border-collapse: collapse;
             text-align: left;
+            margin-top: 16px;
         }
 
         .data-table th, .data-table td {
-            padding: 14px 16px;
-            border-bottom: 1px solid var(--border-standard);
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--glass-border);
         }
 
         .data-table th {
             color: var(--text-muted);
-            font-weight: 600;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
         }
 
-        /* Auth Container Overlay */
-        #auth-overlay {
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .input-control {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(13, 17, 23, 0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: #fff;
+            outline: none;
+        }
+
+        /* Modal */
+        .modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: #0d1117;
-            background-image: var(--bg-gradient);
-            z-index: 1000;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
             display: flex;
             align-items: center;
             justify-content: center;
+            z-index: 1000;
         }
 
-        .auth-card {
+        .modal-box {
             width: 100%;
-            max-width: 420px;
-            padding: 36px;
+            max-width: 400px;
+            background: #161b2c;
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 32px;
+            position: relative;
         }
 
         .hidden {
             display: none !important;
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-    <div id="auth-overlay">
-        <div class="glass-card auth-card">
-            <div class="brand-logo" style="justify-content: center; margin-bottom: 24px;">
-                <i class="fa-solid fa-graduation-cap"></i> EduDocs Portal
+    <nav class="navbar">
+        <div class="brand-logo" onclick="switchView('home-view')">
+            <i class="fa-solid fa-graduation-cap"></i> EduDocs Portal
+        </div>
+        <div class="nav-links">
+            <button class="nav-btn active" id="nav-home" onclick="switchView('home-view')">Home Library</button>
+            <button class="nav-btn hidden" id="nav-admin" onclick="switchView('admin-view')">Admin Panel</button>
+            <div id="user-nav-section">
+                <button class="btn btn-secondary" onclick="openAuthModal('login')">Sign In</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-container">
+
+        <section id="home-view">
+            <div class="hero-section">
+                <h1 class="hero-title">Study Resources & Notes</h1>
+                <p class="hero-subtitle">Access Class 10 Maharashtra Board notes, short revision guides, and mind maps in PDF format.</p>
             </div>
 
+            <div class="controls-bar">
+                <div class="search-wrapper">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" class="search-input" id="search-input" placeholder="Search notes by subject or title..." oninput="handleSearch(this.value)">
+                </div>
+
+                <div class="filter-tabs">
+                    <button class="tab-btn active" onclick="filterCategory('All')">All</button>
+                    <button class="tab-btn" onclick="filterCategory('Detailed Notes')">Detailed Notes</button>
+                    <button class="tab-btn" onclick="filterCategory('Short Notes')">Short Notes</button>
+                    <button class="tab-btn" onclick="filterCategory('Mind Maps')">Mind Maps</button>
+                </div>
+            </div>
+
+            <div class="notes-grid" id="notes-container">
+                </div>
+        </section>
+
+        <section id="admin-view" class="hidden">
+            <h2 style="font-size: 1.5rem; margin-bottom: 20px;">Admin Dashboard</h2>
+
+            <div class="glass-card">
+                <h3 style="margin-bottom: 16px; font-size: 1.1rem;"><i class="fa-solid fa-cloud-arrow-up"></i> Upload Study Material</h3>
+                <form id="upload-note-form" style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 16px; align-items: end;">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label>Document Title</label>
+                        <input type="text" id="note-title-input" class="input-control" required placeholder="e.g. Science 1 Short Notes">
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label>Choose PDF File</label>
+                        <input type="file" id="note-file-input" class="input-control" required accept=".pdf">
+                    </div>
+                    <button type="submit" id="publish-btn" class="btn btn-primary" style="height: 40px;">Publish Document</button>
+                </form>
+            </div>
+
+            <div class="glass-card">
+                <h3 style="margin-bottom: 16px; font-size: 1.1rem;"><i class="fa-solid fa-user-clock"></i> Access Requests</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Password</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pending-users-tbody">
+                        </tbody>
+                </table>
+            </div>
+
+            <div class="glass-card">
+                <h3 style="margin-bottom: 16px; font-size: 1.1rem;"><i class="fa-solid fa-users"></i> Active Accounts</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Password</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="active-users-tbody">
+                        </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <div class="modal-overlay hidden" id="auth-modal">
+        <div class="modal-box">
+            <button onclick="closeAuthModal()" style="position: absolute; right: 16px; top: 16px; background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.2rem;"><i class="fa-solid fa-xmark"></i></button>
+
             <form id="login-form">
-                <h2 style="margin-bottom: 20px; text-align: center; font-size: 1.3rem;">Sign In</h2>
+                <h3 style="margin-bottom: 20px; font-size: 1.2rem; text-align: center;">Sign In</h3>
                 <div class="form-group">
                     <label>Username</label>
                     <input type="text" id="login-username" class="input-control" required placeholder="Enter username">
@@ -309,114 +474,29 @@
                     <label>Password</label>
                     <input type="password" id="login-password" class="input-control" required placeholder="Enter password">
                 </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Access Dashboard</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 10px;">Sign In</button>
                 <p style="text-align: center; margin-top: 16px; font-size: 0.85rem; color: var(--text-muted);">
-                    Need an account? <a href="#" id="toggle-to-register" style="color: var(--accent-primary);">Request Access</a>
+                    Don't have an account? <a href="#" onclick="toggleAuthMode('signup')" style="color: var(--accent-primary);">Request Access</a>
                 </p>
             </form>
 
-            <form id="register-form" class="hidden">
-                <h2 style="margin-bottom: 20px; text-align: center; font-size: 1.3rem;">Request Registration</h2>
+            <form id="signup-form" class="hidden">
+                <h3 style="margin-bottom: 20px; font-size: 1.2rem; text-align: center;">Request Access</h3>
                 <div class="form-group">
-                    <label>Choose Username</label>
-                    <input type="text" id="reg-username" class="input-control" required placeholder="New username">
+                    <label>Username</label>
+                    <input type="text" id="signup-username" class="input-control" required placeholder="Choose a username">
                 </div>
                 <div class="form-group">
-                    <label>Choose Password</label>
-                    <input type="password" id="reg-password" class="input-control" required placeholder="New password">
+                    <label>Password</label>
+                    <input type="password" id="signup-password" class="input-control" required placeholder="Choose a password" oninput="checkPasswordStrength(this.value)">
+                    <small id="password-hint" style="color: var(--text-muted); font-size: 0.75rem; display: block; margin-top: 4px;">Min 8 characters with numbers/symbols.</small>
                 </div>
-                <button type="submit" class="btn btn-success" style="width: 100%; justify-content: center;">Submit Request</button>
+                <button type="submit" class="btn btn-success" style="width: 100%; justify-content: center; margin-top: 10px;">Submit Request</button>
                 <p style="text-align: center; margin-top: 16px; font-size: 0.85rem; color: var(--text-muted);">
-                    Already registered? <a href="#" id="toggle-to-login" style="color: var(--accent-primary);">Sign In</a>
+                    Already have an account? <a href="#" onclick="toggleAuthMode('login')" style="color: var(--accent-primary);">Sign In</a>
                 </p>
             </form>
         </div>
-    </div>
-
-    <div id="app-container" class="hidden" style="display: flex; width: 100%;">
-        <aside id="app-sidebar">
-            <div class="brand-logo">
-                <i class="fa-solid fa-graduation-cap"></i> EduDocs
-            </div>
-            <ul class="nav-menu">
-                <li><a class="nav-item active" onclick="switchView('home-view')"><i class="fa-solid fa-book"></i> Study Library</a></li>
-                <li id="admin-nav-item" class="hidden"><a class="nav-item" onclick="switchView('admin-view')"><i class="fa-solid fa-user-shield"></i> Portal Admin</a></li>
-            </ul>
-            <div class="user-profile-section">
-                <div class="user-info">
-                    <div class="avatar" id="user-avatar-char">U</div>
-                    <div>
-                        <div id="user-display-name" style="font-weight: 600; font-size: 0.9rem;">User</div>
-                        <div id="user-role-label" style="font-size: 0.75rem; color: var(--text-muted);">Member</div>
-                    </div>
-                </div>
-                <button class="btn btn-secondary" onclick="handleLogout()" style="padding: 8px;"><i class="fa-solid fa-right-from-bracket"></i></button>
-            </div>
-        </aside>
-
-        <main id="app-content">
-            <section id="home-view">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px;">
-                    <div>
-                        <h1 style="font-size: 1.8rem; font-weight: 700;">Educational Resources</h1>
-                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">Access curated PDFs and study materials</p>
-                    </div>
-                    <input type="text" id="search-input" class="input-control" placeholder="Search resources..." style="width: 280px;" oninput="handleSearch(this.value)">
-                </div>
-
-                <div class="notes-grid" id="notes-container">
-                    </div>
-            </section>
-
-            <section id="admin-view" class="hidden">
-                <h1 style="font-size: 1.8rem; font-weight: 700; margin-bottom: 24px;">Administrative Control</h1>
-                
-                <div class="glass-card">
-                    <h2 style="font-size: 1.1rem; margin-bottom: 16px;"><i class="fa-solid fa-user-clock"></i> Access Requests</h2>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Username</th>
-                                <th>Requested Password</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="pending-users-tbody">
-                            </tbody>
-                    </table>
-                </div>
-
-                <div class="glass-card">
-                    <h2 style="font-size: 1.1rem; margin-bottom: 16px;"><i class="fa-solid fa-file-circle-plus"></i> Publish New Material</h2>
-                    <form id="upload-note-form" style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 16px; align-items: end;">
-                        <div class="form-group" style="margin-bottom:0;">
-                            <label>Document Title</label>
-                            <input type="text" id="note-title-input" class="input-control" required placeholder="e.g. Science 1 Short Notes">
-                        </div>
-                        <div class="form-group" style="margin-bottom:0;">
-                            <label>Select Local File</label>
-                            <input type="file" id="note-file-input" class="input-control" required accept=".pdf">
-                        </div>
-                        <button type="submit" id="publish-btn" class="btn btn-primary" style="height: 42px;">Publish Device File</button>
-                    </form>
-                </div>
-
-                <div class="glass-card">
-                    <h2 style="font-size: 1.1rem; margin-bottom: 16px;"><i class="fa-solid fa-users"></i> Registered Active Accounts</h2>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Username</th>
-                                <th>Password Key</th>
-                                <th>System Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="active-users-tbody">
-                            </tbody>
-                    </table>
-                </div>
-            </section>
-        </main>
     </div>
 
     <script>
@@ -425,25 +505,28 @@
         const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 
         let globalState = {
-            approvedUsers: {},
+            registeredUsers: [],
             pendingUsers: [],
             eduNotesCatalog: []
         };
 
         let currentUser = null;
+        let selectedCategoryFilter = 'All';
+        let searchQuery = '';
+        let isPasswordStrongEnough = false;
 
-        // --- JSONBIN SYNC SERVICES ---
+        // Sync with Cloud
         async function syncFromCloud() {
             try {
-                const response = await fetch(`${JSONBIN_URL}/latest`, {
+                const res = await fetch(`${JSONBIN_URL}/latest`, {
                     headers: { 'X-Master-Key': API_KEY }
                 });
-                if (response.ok) {
-                    const data = await response.json();
+                if (res.ok) {
+                    const data = await res.json();
                     globalState = data.record;
                 }
             } catch (err) {
-                console.error("Cloud synchronization failed:", err);
+                console.error("Cloud fetch error:", err);
             }
         }
 
@@ -458,87 +541,17 @@
                     body: JSON.stringify(globalState)
                 });
             } catch (err) {
-                console.error("Cloud push failed:", err);
+                console.error("Cloud save error:", err);
             }
         }
 
-        // --- AUTHENTICATION FLOW ---
-        document.getElementById('toggle-to-register').onclick = (e) => {
-            e.preventDefault();
-            document.getElementById('login-form').classList.add('hidden');
-            document.getElementById('register-form').classList.remove('hidden');
-        };
-
-        document.getElementById('toggle-to-login').onclick = (e) => {
-            e.preventDefault();
-            document.getElementById('register-form').classList.add('hidden');
-            document.getElementById('login-form').classList.remove('hidden');
-        };
-
-        document.getElementById('login-form').onsubmit = async (e) => {
-            e.preventDefault();
-            await syncFromCloud();
-            
-            const u = document.getElementById('login-username').value.trim();
-            const p = document.getElementById('login-password').value.trim();
-
-            if (u === 'Patil' && p === 'patil123') {
-                currentUser = { username: 'Patil', role: 'admin' };
-                initializePortalSession();
-                return;
-            }
-
-            if (globalState.approvedUsers && globalState.approvedUsers[u] === p) {
-                currentUser = { username: u, role: 'user' };
-                initializePortalSession();
-            } else {
-                alert('Invalid credentials or account pending approval.');
-            }
-        };
-
-        document.getElementById('register-form').onsubmit = async (e) => {
-            e.preventDefault();
-            await syncFromCloud();
-
-            const u = document.getElementById('reg-username').value.trim();
-            const p = document.getElementById('reg-password').value.trim();
-
-            if (!globalState.pendingUsers) globalState.pendingUsers = [];
-            
-            if (globalState.approvedUsers[u] || u === 'Patil') {
-                alert('Username already registered.');
-                return;
-            }
-
-            globalState.pendingUsers.push({ username: u, password: p });
-            await syncToCloud();
-            
-            alert('Request submitted! An admin must approve your account.');
-            document.getElementById('register-form').reset();
-            document.getElementById('toggle-to-login').click();
-        };
-
-        function initializePortalSession() {
-            document.getElementById('auth-overlay').classList.add('hidden');
-            document.getElementById('app-container').classList.remove('hidden');
-            
-            document.getElementById('user-display-name').innerText = currentUser.username;
-            document.getElementById('user-avatar-char').innerText = currentUser.username.charAt(0).toUpperCase();
-            
-            if (currentUser.role === 'admin') {
-                document.getElementById('admin-nav-item').classList.remove('hidden');
-                document.getElementById('user-role-label').innerText = 'Administrator';
-            } else {
-                document.getElementById('admin-nav-item').classList.add('hidden');
-                document.getElementById('user-role-label').innerText = 'Student Member';
-            }
-
-            // Default Setup catalog list if empty
+        // Initialize App Catalog
+        function initializeCatalog() {
             if (!globalState.eduNotesCatalog || globalState.eduNotesCatalog.length === 0) {
                 globalState.eduNotesCatalog = [
                     // DETAILED NOTES
-                    { id: '1', name: 'Science 1 Detailed Notes', category: 'Detailed Notes', url: 'Class 10 S & T Part 1 .pdf' },
-                    { id: '2', name: 'Science 2 Detailed Notes', category: 'Detailed Notes', url: 'Class 10 S & T Part 2 .pdf' },
+                    { id: '1', name: 'Science 1 Detailed Notes Pdf 2', category: 'Detailed Notes', url: 'Class 10 S & T Part 1 .pdf' },
+                    { id: '2', name: 'Science 2 Detailed Notes Pdf 2', category: 'Detailed Notes', url: 'Class 10 S & T Part 2 .pdf' },
                     { id: '3', name: 'Geography Detailed Notes', category: 'Detailed Notes', url: 'Geography notes.pdf' },
                     { id: '4', name: 'History Detailed Notes', category: 'Detailed Notes', url: 'History Notes .pdf' },
 
@@ -560,59 +573,37 @@
                 ];
                 syncToCloud();
             }
-
-            renderNotes();
         }
 
-        function handleLogout() {
-            currentUser = null;
-            document.getElementById('auth-overlay').classList.remove('hidden');
-            document.getElementById('app-container').classList.add('hidden');
-        }
-
-        // --- NAVIGATION CONTROLLER ---
-        function switchView(viewId) {
-            document.getElementById('home-view').classList.add('hidden');
-            document.getElementById('admin-view').classList.add('hidden');
-            
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-
-            if (viewId === 'home-view') {
-                document.getElementById('home-view').classList.remove('hidden');
-                document.querySelectorAll('.nav-item')[0].classList.add('active');
-                renderNotes();
-            } else if (viewId === 'admin-view') {
-                document.getElementById('admin-view').classList.remove('hidden');
-                document.querySelectorAll('.nav-item')[1].classList.add('active');
-                renderAdminManagementData();
-            }
-        }
-
-        // --- RENDER NOTES & CATEGORIES ---
-        function renderNotes(filter = '') {
+        // Render Notes with Categories
+        function renderNotes() {
             const container = document.getElementById('notes-container');
             const categories = ['Detailed Notes', 'Short Notes', 'Mind Maps'];
-            
-            const filteredCatalog = (globalState.eduNotesCatalog || []).filter(n => 
-                n.name.toLowerCase().includes(filter.toLowerCase())
-            );
 
-            if (filteredCatalog.length === 0) {
-                container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">No study materials found.</div>`;
+            let filteredList = (globalState.eduNotesCatalog || []).filter(note => {
+                const matchesSearch = note.name.toLowerCase().includes(searchQuery.toLowerCase());
+                const matchesCategory = selectedCategoryFilter === 'All' || note.category === selectedCategoryFilter;
+                return matchesSearch && matchesCategory;
+            });
+
+            if (filteredList.length === 0) {
+                container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">No study materials found matching your criteria.</div>`;
                 return;
             }
 
             let htmlOutput = '';
 
             categories.forEach(categoryName => {
-                const categoryNotes = filteredCatalog.filter(n => n.category === categoryName);
+                if (selectedCategoryFilter !== 'All' && selectedCategoryFilter !== categoryName) {
+                    return;
+                }
+
+                const categoryNotes = filteredList.filter(n => n.category === categoryName);
 
                 if (categoryNotes.length > 0) {
                     htmlOutput += `
-                        <div style="grid-column: 1 / -1; margin-top: 20px; margin-bottom: 10px;">
-                            <h3 style="color: var(--accent-primary); border-bottom: 1px solid var(--glass-border); padding-bottom: 8px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
-                                <i class="fa-solid fa-layer-group"></i> ${categoryName}
-                            </h3>
+                        <div class="category-header">
+                            <h3><i class="fa-solid fa-layer-group"></i> ${categoryName}</h3>
                         </div>
                     `;
 
@@ -621,7 +612,7 @@
                             <div class="note-card">
                                 <div>
                                     <div class="note-meta">
-                                        <span><i class="fa-solid fa-file-pdf"></i> ${note.category}</span>
+                                        <span class="category-badge">${note.category}</span>
                                     </div>
                                     <div class="note-title">${note.name}</div>
                                 </div>
@@ -639,8 +630,17 @@
             container.innerHTML = htmlOutput;
         }
 
+        function filterCategory(category) {
+            selectedCategoryFilter = category;
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.innerText === category);
+            });
+            renderNotes();
+        }
+
         function handleSearch(query) {
-            renderNotes(query);
+            searchQuery = query;
+            renderNotes();
         }
 
         function handleDownloadNote(title, url) {
@@ -656,83 +656,196 @@
             }
         }
 
-        // --- ADMIN CONTROLLER FUNCTIONS ---
-        function renderAdminManagementData() {
-            // Render pending approvals
+        // View Switcher
+        function switchView(viewId) {
+            document.getElementById('home-view').classList.add('hidden');
+            document.getElementById('admin-view').classList.add('hidden');
+
+            document.getElementById('nav-home').classList.remove('active');
+            document.getElementById('nav-admin').classList.remove('active');
+
+            if (viewId === 'home-view') {
+                document.getElementById('home-view').classList.remove('hidden');
+                document.getElementById('nav-home').classList.add('active');
+                renderNotes();
+            } else if (viewId === 'admin-view') {
+                document.getElementById('admin-view').classList.remove('hidden');
+                document.getElementById('nav-admin').classList.add('active');
+                renderAdminData();
+            }
+        }
+
+        // Auth Logic
+        function openAuthModal(mode) {
+            document.getElementById('auth-modal').classList.remove('hidden');
+            toggleAuthMode(mode);
+        }
+
+        function closeAuthModal() {
+            document.getElementById('auth-modal').classList.add('hidden');
+        }
+
+        function toggleAuthMode(mode) {
+            if (mode === 'login') {
+                document.getElementById('login-form').classList.remove('hidden');
+                document.getElementById('signup-form').classList.add('hidden');
+            } else {
+                document.getElementById('login-form').classList.add('hidden');
+                document.getElementById('signup-form').classList.remove('hidden');
+            }
+        }
+
+        function checkPasswordStrength(val) {
+            const hint = document.getElementById('password-hint');
+            isPasswordStrongEnough = val.length >= 8;
+            if (isPasswordStrongEnough) {
+                hint.style.color = '#2ea043';
+                hint.innerText = 'Password strength acceptable.';
+            } else {
+                hint.style.color = 'var(--text-muted)';
+                hint.innerText = 'Min 8 characters with numbers/symbols.';
+            }
+        }
+
+        document.getElementById('login-form').onsubmit = async function(e) {
+            e.preventDefault();
+            await syncFromCloud();
+
+            const uInput = document.getElementById('login-username').value.trim();
+            const pInput = document.getElementById('login-password').value.trim();
+
+            if (uInput === 'Patil' && pInput === 'patil123') {
+                currentUser = { username: 'Patil', role: 'admin' };
+                renderUserNavbar();
+                closeAuthModal();
+                switchView('admin-view');
+                return;
+            }
+
+            const activeUser = globalState.registeredUsers.find(u => u.username === uInput && u.password === pInput);
+            if (activeUser) {
+                currentUser = activeUser;
+                renderUserNavbar();
+                closeAuthModal();
+            } else {
+                const isPending = globalState.pendingUsers.some(u => u.username === uInput);
+                if (isPending) alert('Your account is pending approval from the Admin.');
+                else alert('Invalid username or password.');
+            }
+        };
+
+        document.getElementById('signup-form').onsubmit = async function(e) {
+            e.preventDefault();
+
+            if (!isPasswordStrongEnough) {
+                alert('Please enter a stronger password (at least 8 characters).');
+                return;
+            }
+
+            const uInput = document.getElementById('signup-username').value.trim();
+            const pInput = document.getElementById('signup-password').value.trim();
+
+            const exists = (globalState.registeredUsers || []).some(u => u.username === uInput) || 
+                           (globalState.pendingUsers || []).some(u => u.username === uInput);
+
+            if (exists) {
+                alert('Username already exists or is pending approval.');
+                return;
+            }
+
+            if (!globalState.pendingUsers) globalState.pendingUsers = [];
+            globalState.pendingUsers.push({ username: uInput, password: pInput, role: 'user' });
+            await syncToCloud();
+
+            alert('Registration request submitted! Please wait for Admin approval.');
+            closeAuthModal();
+        };
+
+        function renderUserNavbar() {
+            const userSection = document.getElementById('user-nav-section');
+            if (currentUser) {
+                userSection.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <span style="font-weight: 600; font-size: 0.9rem; color: var(--accent-primary);"><i class="fa-solid fa-user"></i> ${currentUser.username}</span>
+                        <button class="btn btn-secondary" onclick="handleLogout()">Sign Out</button>
+                    </div>
+                `;
+                if (currentUser.role === 'admin') {
+                    document.getElementById('nav-admin').classList.remove('hidden');
+                }
+            } else {
+                userSection.innerHTML = `<button class="btn btn-secondary" onclick="openAuthModal('login')">Sign In</button>`;
+                document.getElementById('nav-admin').classList.add('hidden');
+            }
+        }
+
+        function handleLogout() {
+            currentUser = null;
+            renderUserNavbar();
+            switchView('home-view');
+        }
+
+        // Admin Management
+        function renderAdminData() {
             const pendingTbody = document.getElementById('pending-users-tbody');
             pendingTbody.innerHTML = '';
-            
-            (globalState.pendingUsers || []).forEach((u, index) => {
+            (globalState.pendingUsers || []).forEach((u, idx) => {
                 pendingTbody.innerHTML += `
                     <tr>
                         <td>${u.username}</td>
                         <td>${u.password}</td>
                         <td>
-                            <button class="btn btn-success" style="padding: 4px 12px; font-size: 0.8rem;" onclick="approveUser(${index})">Approve</button>
-                            <button class="btn btn-danger" style="padding: 4px 12px; font-size: 0.8rem;" onclick="rejectUser(${index})">Reject</button>
+                            <button class="btn btn-success" style="padding: 4px 10px; font-size: 0.8rem;" onclick="approveUser(${idx})">Approve</button>
+                            <button class="btn btn-danger" style="padding: 4px 10px; font-size: 0.8rem;" onclick="rejectUser(${idx})">Reject</button>
                         </td>
                     </tr>
                 `;
             });
 
-            // Render active accounts
             const activeTbody = document.getElementById('active-users-tbody');
             activeTbody.innerHTML = '';
-            
-            for (let [uname, pass] in Object.entries(globalState.approvedUsers || {})) {
+            (globalState.registeredUsers || []).forEach((u, idx) => {
                 activeTbody.innerHTML += `
                     <tr>
-                        <td>${uname}</td>
-                        <td>${pass}</td>
+                        <td>${u.username}</td>
+                        <td>${u.password}</td>
                         <td>
-                            <button class="btn btn-danger" style="padding: 4px 12px; font-size: 0.8rem;" onclick="revokeUser('${uname}')">Revoke Access</button>
+                            <button class="btn btn-danger" style="padding: 4px 10px; font-size: 0.8rem;" onclick="revokeUser(${idx})">Revoke</button>
                         </td>
                     </tr>
                 `;
-            }
+            });
         }
 
-        async function approveUser(index) {
-            const userObj = globalState.pendingUsers[index];
-            if (!globalState.approvedUsers) globalState.approvedUsers = {};
-            
-            globalState.approvedUsers[userObj.username] = userObj.password;
-            globalState.pendingUsers.splice(index, 1);
-            
+        async function approveUser(idx) {
+            const user = globalState.pendingUsers[idx];
+            if (!globalState.registeredUsers) globalState.registeredUsers = [];
+            globalState.registeredUsers.push(user);
+            globalState.pendingUsers.splice(idx, 1);
             await syncToCloud();
-            renderAdminManagementData();
+            renderAdminData();
         }
 
-        async function rejectUser(index) {
-            globalState.pendingUsers.splice(index, 1);
+        async function rejectUser(idx) {
+            globalState.pendingUsers.splice(idx, 1);
             await syncToCloud();
-            renderAdminManagementData();
+            renderAdminData();
         }
 
-        async function revokeUser(username) {
-            delete globalState.approvedUsers[username];
+        async function revokeUser(idx) {
+            globalState.registeredUsers.splice(idx, 1);
             await syncToCloud();
-            renderAdminManagementData();
+            renderAdminData();
         }
 
-        // FILE PUBLISHING CONTROLLER
-        document.getElementById('upload-note-form').addEventListener('submit', async function(e) {
+        // Handle Admin Publish File
+        document.getElementById('upload-note-form').onsubmit = async function(e) {
             e.preventDefault();
-            const uploadBtn = document.getElementById('publish-btn');
-            uploadBtn.innerText = "Publishing...";
-            uploadBtn.disabled = true;
-
             const title = document.getElementById('note-title-input').value.trim();
             const file = document.getElementById('note-file-input').files[0];
 
-            if (!file) {
-                alert('Please select a file.');
-                uploadBtn.innerText = "Publish Device File";
-                uploadBtn.disabled = false;
-                return;
-            }
+            if (!file) return;
 
-            // Determine category automatically based on file title
             let category = 'Detailed Notes';
             const lowerTitle = title.toLowerCase();
             if (lowerTitle.includes('short notes')) {
@@ -744,58 +857,23 @@
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = async function() {
-                try {
-                    const base64Data = reader.result;
-                    
-                    globalState.eduNotesCatalog.push({
-                        id: Date.now().toString(),
-                        name: title,
-                        category: category,
-                        url: base64Data
-                    });
-
-                    await syncToCloud();
-                    alert('Document successfully published!');
-                    document.getElementById('upload-note-form').reset();
-                    renderAdminManagementData();
-                } catch(error) {
-                    console.error(error);
-                    alert('Failed to publish file.');
-                } finally {
-                    uploadBtn.innerText = "Publish Device File";
-                    uploadBtn.disabled = false;
-                }
+                globalState.eduNotesCatalog.push({
+                    id: Date.now().toString(),
+                    name: title,
+                    category: category,
+                    url: reader.result
+                });
+                await syncToCloud();
+                alert('Document published!');
+                document.getElementById('upload-note-form').reset();
             };
-            reader.onerror = function() {
-                alert('Error reading local file.');
-                uploadBtn.innerText = "Publish Device File";
-                uploadBtn.disabled = false;
-            };
-        });
+        };
 
-        // Background polling for sync
-        setInterval(async () => {
-            const previousTotalNotes = (globalState.eduNotesCatalog || []).length;
-            const previousTotalPending = (globalState.pendingUsers || []).length;
-            
-            await syncFromCloud();
-            
-            if (document.getElementById('home-view').style.display !== 'none' && (globalState.eduNotesCatalog || []).length !== previousTotalNotes) {
-                renderNotes();
-            }
-            if (!document.getElementById('admin-view').classList.contains('hidden') && (globalState.pendingUsers || []).length !== previousTotalPending) {
-                renderAdminManagementData();
-            }
-        }, 5000);
-
+        // On Load
         window.onload = async function() {
             await syncFromCloud();
+            initializeCatalog();
             renderNotes();
-            if (currentUser && currentUser.username === 'Patil') {
-                switchView('admin-view');
-            } else {
-                switchView('home-view');
-            }
         };
     </script>
 </body>
