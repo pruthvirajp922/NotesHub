@@ -770,60 +770,14 @@
             }
         }
 
-       // Render Notes Grouped by Category Titles
-        function renderNotes() {
+        function renderNotes(filter = '') {
             const container = document.getElementById('notes-container');
-            const categories = ['Detailed Notes', 'Short Notes', 'Mind Maps'];
+            const notes = globalState.eduNotesCatalog.filter(n => n.name.toLowerCase().includes(filter.toLowerCase()));
 
-            let filteredList = (globalState.eduNotesCatalog || []).filter(note => {
-                const matchesSearch = note.name.toLowerCase().includes(searchQuery.toLowerCase());
-                const matchesCategory = selectedCategoryFilter === 'All' || note.category === selectedCategoryFilter;
-                return matchesSearch && matchesCategory;
-            });
-
-            if (filteredList.length === 0) {
+            if (notes.length === 0) {
                 container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">No study materials found.</div>`;
                 return;
             }
-
-            let htmlOutput = '';
-
-            categories.forEach(categoryName => {
-                if (selectedCategoryFilter !== 'All' && selectedCategoryFilter !== categoryName) {
-                    return;
-                }
-
-                const categoryNotes = filteredList.filter(n => n.category === categoryName);
-
-                if (categoryNotes.length > 0) {
-                    htmlOutput += `
-                        <div class="category-header">
-                            <h3><i class="fa-solid fa-layer-group"></i> ${categoryName}</h3>
-                        </div>
-                    `;
-
-                    categoryNotes.forEach(note => {
-                        htmlOutput += `
-                            <div class="note-card">
-                                <div>
-                                    <div class="note-meta">
-                                        <span class="category-badge">${note.category}</span>
-                                    </div>
-                                    <div class="note-title">${note.name}</div>
-                                </div>
-                                <div style="margin-top: 16px;">
-                                    <button class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="handleDownloadNote('${note.name.replace(/'/g, "\\'")}', '${note.url}')">
-                                        <i class="fa-solid fa-download"></i> Download PDF
-                                    </button>
-                                </div>
-                            </div>
-                        `;
-                    });
-                }
-            });
-
-            container.innerHTML = htmlOutput;
-        }
 
             container.innerHTML = notes.map(note => `
                 <div class="note-card">
