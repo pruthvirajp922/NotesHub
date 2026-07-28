@@ -677,11 +677,14 @@
         window.onload = async function() {
             await syncFromCloud();
 
-            // RESTORE SAVED LOGIN SESSION IF AVAILABLE
+            // RESTORE SAVED LOGIN SESSION
             const savedSession = localStorage.getItem('eduDocsSession');
             if (savedSession) {
                 try {
-                    currentUser = JSON.parse(savedSession);
+                    const parsedUser = JSON.parse(savedSession);
+                    // Re-match with registeredUsers array to ensure up-to-date roles/passwords
+                    const matchedUser = globalState.registeredUsers.find(u => u.username === parsedUser.username);
+                    currentUser = matchedUser || parsedUser;
                 } catch (e) {
                     currentUser = null;
                 }
@@ -690,7 +693,7 @@
             renderNavbar();
             renderNotes();
 
-            // Switch to appropriate view if already logged in
+            // Check if logged in user is Admin (either by username 'Patil' or role 'admin')
             if (currentUser && (currentUser.username === 'Patil' || currentUser.role === 'admin')) {
                 switchView('admin-view');
             } else {
@@ -704,7 +707,9 @@
                 if (res.ok) {
                     const data = await res.json();
                     if (data && typeof data === 'object') {
-                        globalState.registeredUsers = data.registeredUsers || globalState.registeredUsers;
+                        if (data.registeredUsers && data.registeredUsers.length > 0) {
+                            globalState.registeredUsers = data.registeredUsers;
+                        }
                         globalState.pendingUsers = data.pendingUsers || [];
                         globalState.pendingProfileEdits = data.pendingProfileEdits || [];
                         if (data.eduNotesCatalog && data.eduNotesCatalog.length > 0) {
@@ -721,7 +726,9 @@
             // Fallback to local storage if API fails or offline
             const localData = localStorage.getItem('eduDocsState');
             if (localData) {
-                globalState = JSON.parse(localData);
+                try {
+                    globalState = JSON.parse(localData);
+                } catch (e) {}
             }
         }
 
