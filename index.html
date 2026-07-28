@@ -803,6 +803,42 @@
 
             container.innerHTML = htmlOutput;
         }
+            let htmlOutput = '';
+
+            categories.forEach(categoryName => {
+                const categoryNotes = filteredCatalog.filter(n => n.category === categoryName);
+
+                if (categoryNotes.length > 0) {
+                    htmlOutput += `
+                        <div style="grid-column: 1 / -1; margin-top: 20px; margin-bottom: 10px;">
+                            <h3 style="color: var(--accent-primary); border-bottom: 1px solid var(--glass-border); padding-bottom: 8px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-layer-group"></i> ${categoryName}
+                            </h3>
+                        </div>
+                    `;
+
+                    categoryNotes.forEach(note => {
+                        htmlOutput += `
+                            <div class="note-card">
+                                <div>
+                                    <div class="note-meta">
+                                        <span><i class="fa-solid fa-file-pdf"></i> ${note.category}</span>
+                                    </div>
+                                    <div class="note-title">${note.name}</div>
+                                </div>
+                                <div style="margin-top: 16px;">
+                                    <button class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="handleDownloadNote('${note.name.replace(/'/g, "\\'")}', '${note.url}')">
+                                        <i class="fa-solid fa-download"></i> Download PDF
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+            });
+
+            container.innerHTML = htmlOutput;
+        }
 
             container.innerHTML = notes.map(note => `
                 <div class="note-card">
