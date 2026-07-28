@@ -435,7 +435,7 @@
                 <i class="fa-solid fa-book-open"></i> Notes
             </button>
             <div id="auth-buttons-container" style="display: flex; gap: 8px; flex: 1;">
-                </div>
+            </div>
         </div>
     </header>
 
@@ -458,7 +458,7 @@
                 </div>
 
                 <div class="notes-grid" id="notes-container">
-                    </div>
+                </div>
             </div>
         </section>
 
@@ -652,37 +652,23 @@
             pendingUsers: [],
             pendingProfileEdits: [],
             eduNotesCatalog: [
-    // -----------------------------------------------------------------
-    // CATEGORY 1: DETAILED NOTES
-    // (Files that do NOT contain "short notes" or "mind map/maps")
-    // -----------------------------------------------------------------
-    { id: '1', name: 'Science 1 Detailed Notes', category: 'Detailed Notes', url: 'Class 10 S & T Part 1 .pdf' },
-    { id: '2', name: 'Science 2 Detailed Notes', category: 'Detailed Notes', url: 'Class 10 S & T Part 2 .pdf' },
-    { id: '3', name: 'Geography Detailed Notes', category: 'Detailed Notes', url: 'Geography notes.pdf' },
-    { id: '4', name: 'History Detailed Notes', category: 'Detailed Notes', url: 'History Notes .pdf' },
-
-    // -----------------------------------------------------------------
-    // CATEGORY 2: SHORT NOTES
-    // (Files that contain "short notes")
-    // -----------------------------------------------------------------
-    { id: '5', name: 'Science 1 Short Notes Pdf 2', category: 'Short Notes', url: 'Short Science 1 Notes.pdf' },
-    { id: '6', name: 'Science 2 Short Notes Pdf 2', category: 'Short Notes', url: 'Short Science 2 notes.pdf' },
-    { id: '7', name: 'Geography Short Notes', category: 'Short Notes', url: 'Geography short notes.pdf' },
-    { id: '8', name: 'History Short Notes', category: 'Short Notes', url: 'History short notes.pdf' },
-    { id: '9', name: 'Science 1 Short Notes', category: 'Short Notes', url: 'Science 1 short notes.pdf' },
-    { id: '10', name: 'Science 2 Short Notes', category: 'Short Notes', url: 'Science 2 short notes.pdf' },
-    { id: '11', name: 'Math 1 Short Notes', category: 'Short Notes', url: 'Math 1 short notes.pdf' },
-    { id: '12', name: 'Math 2 Short Notes', category: 'Short Notes', url: 'Math 2 short notes.pdf' },
-
-    // -----------------------------------------------------------------
-    // CATEGORY 3: MIND MAPS
-    // (Files that contain "mind map" or "mind maps" - names kept as-is)
-    // -----------------------------------------------------------------
-    { id: '13', name: 'Science 1 mind maps.pdf', category: 'Mind Maps', url: 'Science 1 mind maps.pdf' },
-    { id: '14', name: 'Science 2 mind maps.pdf', category: 'Mind Maps', url: 'Science 2 mind maps.pdf' },
-    { id: '15', name: 'Math 1 mind map.pdf', category: 'Mind Maps', url: 'Math 1 mind map.pdf' },
-    { id: '16', name: 'Math 2 mind map.pdf', category: 'Mind Maps', url: 'Math 2 mind map.pdf' }
-          ]
+                { id: '1', name: 'Science 1 Detailed Notes', category: 'Detailed Notes', url: 'Class 10 S & T Part 1 .pdf' },
+                { id: '2', name: 'Science 2 Detailed Notes', category: 'Detailed Notes', url: 'Class 10 S & T Part 2 .pdf' },
+                { id: '3', name: 'Geography Detailed Notes', category: 'Detailed Notes', url: 'Geography notes.pdf' },
+                { id: '4', name: 'History Detailed Notes', category: 'Detailed Notes', url: 'History Notes .pdf' },
+                { id: '5', name: 'Science 1 Short Notes Pdf 2', category: 'Short Notes', url: 'Short Science 1 Notes.pdf' },
+                { id: '6', name: 'Science 2 Short Notes Pdf 2', category: 'Short Notes', url: 'Short Science 2 notes.pdf' },
+                { id: '7', name: 'Geography Short Notes', category: 'Short Notes', url: 'Geography short notes.pdf' },
+                { id: '8', name: 'History Short Notes', category: 'Short Notes', url: 'History short notes.pdf' },
+                { id: '9', name: 'Science 1 Short Notes', category: 'Short Notes', url: 'Science 1 short notes.pdf' },
+                { id: '10', name: 'Science 2 Short Notes', category: 'Short Notes', url: 'Science 2 short notes.pdf' },
+                { id: '11', name: 'Math 1 Short Notes', category: 'Short Notes', url: 'Math 1 short notes.pdf' },
+                { id: '12', name: 'Math 2 Short Notes', category: 'Short Notes', url: 'Math 2 short notes.pdf' },
+                { id: '13', name: 'Science 1 mind maps.pdf', category: 'Mind Maps', url: 'Science 1 mind maps.pdf' },
+                { id: '14', name: 'Science 2 mind maps.pdf', category: 'Mind Maps', url: 'Science 2 mind maps.pdf' },
+                { id: '15', name: 'Math 1 mind map.pdf', category: 'Mind Maps', url: 'Math 1 mind map.pdf' },
+                { id: '16', name: 'Math 2 mind map.pdf', category: 'Mind Maps', url: 'Math 2 mind map.pdf' }
+            ]
         };
 
         let currentUser = null;
@@ -690,9 +676,26 @@
 
         window.onload = async function() {
             await syncFromCloud();
+
+            // RESTORE SAVED LOGIN SESSION IF AVAILABLE
+            const savedSession = localStorage.getItem('eduDocsSession');
+            if (savedSession) {
+                try {
+                    currentUser = JSON.parse(savedSession);
+                } catch (e) {
+                    currentUser = null;
+                }
+            }
+
             renderNavbar();
             renderNotes();
-            switchView('home-view');
+
+            // Switch to appropriate view if already logged in
+            if (currentUser && (currentUser.username === 'Patil' || currentUser.role === 'admin')) {
+                switchView('admin-view');
+            } else {
+                switchView('home-view');
+            }
         };
 
         async function syncFromCloud() {
@@ -707,58 +710,39 @@
                         if (data.eduNotesCatalog && data.eduNotesCatalog.length > 0) {
                             globalState.eduNotesCatalog = data.eduNotesCatalog;
                         }
+                        localStorage.setItem('eduDocsState', JSON.stringify(globalState));
+                        return;
                     }
                 }
             } catch (err) {
-                console.warn('Cloud sync offline. Using local memory state.');
+                console.warn('Cloud sync offline. Loading local backup state.');
+            }
+
+            // Fallback to local storage if API fails or offline
+            const localData = localStorage.getItem('eduDocsState');
+            if (localData) {
+                globalState = JSON.parse(localData);
             }
         }
 
-        async function syncFromCloud() {
-    try {
-        const res = await fetch(JSON_BIN_URL);
-        if (res.ok) {
-            const data = await res.json();
-            if (data && typeof data === 'object') {
-                globalState.registeredUsers = data.registeredUsers || globalState.registeredUsers;
-                globalState.pendingUsers = data.pendingUsers || [];
-                globalState.pendingProfileEdits = data.pendingProfileEdits || [];
-                if (data.eduNotesCatalog && data.eduNotesCatalog.length > 0) {
-                    globalState.eduNotesCatalog = data.eduNotesCatalog;
+        async function syncToCloud() {
+            // Save locally first so data isn't lost if network drops
+            localStorage.setItem('eduDocsState', JSON.stringify(globalState));
+
+            try {
+                const response = await fetch(JSON_BIN_URL, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(globalState)
+                });
+
+                if (!response.ok) {
+                    console.error('Failed to sync to cloud. Status:', response.status);
                 }
-                localStorage.setItem('eduDocsState', JSON.stringify(globalState));
-                return;
+            } catch (err) {
+                console.error('Failed to sync to cloud:', err);
             }
         }
-    } catch (err) {
-        console.warn('Cloud sync offline. Loading local backup state.');
-    }
-
-    // Fallback to local storage if API fails or offline
-    const localData = localStorage.getItem('eduDocsState');
-    if (localData) {
-        globalState = JSON.parse(localData);
-    }
-}
-
-async function syncToCloud() {
-    // Save locally first so data isn't lost if network drops
-    localStorage.setItem('eduDocsState', JSON.stringify(globalState));
-
-    try {
-        const response = await fetch(JSON_BIN_URL, {
-            method: 'PUT', // Uses PUT instead of POST so npoint updates the bin
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(globalState)
-        });
-
-        if (!response.ok) {
-            console.error('Failed to sync to cloud. Status:', response.status);
-        }
-    } catch (err) {
-        console.error('Failed to sync to cloud:', err);
-    }
-}
 
         function switchView(viewId) {
             document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
@@ -1004,17 +988,18 @@ async function syncToCloud() {
         }
 
         async function approveUserRegistration(index) {
-    const approved = globalState.pendingUsers.splice(index, 1)[0];
-    globalState.registeredUsers.push(approved);
-    await syncToCloud();
-    renderAdminPortal();
-}
+            const approved = globalState.pendingUsers.splice(index, 1)[0];
+            globalState.registeredUsers.push(approved);
+            await syncToCloud();
+            renderAdminPortal();
+        }
 
-async function rejectUserRegistration(index) {
-    globalState.pendingUsers.splice(index, 1);
-    await syncToCloud();
-    renderAdminPortal();
-}
+        async function rejectUserRegistration(index) {
+            globalState.pendingUsers.splice(index, 1);
+            await syncToCloud();
+            renderAdminPortal();
+        }
+
         async function approveProfileEdit(index) {
             const edit = globalState.pendingProfileEdits.splice(index, 1)[0];
             const user = globalState.registeredUsers.find(u => u.username === edit.originalUsername);
@@ -1024,6 +1009,7 @@ async function rejectUserRegistration(index) {
                 if (currentUser && currentUser.username === edit.originalUsername) {
                     currentUser.username = user.username;
                     currentUser.password = user.password;
+                    localStorage.setItem('eduDocsSession', JSON.stringify(currentUser));
                 }
             }
             await syncToCloud();
@@ -1074,6 +1060,9 @@ async function rejectUserRegistration(index) {
 
             if (match) {
                 currentUser = match;
+                // SAVE SESSION TO LOCAL STORAGE
+                localStorage.setItem('eduDocsSession', JSON.stringify(currentUser));
+
                 closeAuthModal();
                 renderNavbar();
                 if (currentUser.username === 'Patil' || currentUser.role === 'admin') {
@@ -1116,6 +1105,9 @@ async function rejectUserRegistration(index) {
 
         function handleLogout() {
             currentUser = null;
+            // CLEAR SAVED SESSION
+            localStorage.removeItem('eduDocsSession');
+
             renderNavbar();
             switchView('home-view');
         }
