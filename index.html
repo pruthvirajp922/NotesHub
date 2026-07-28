@@ -648,7 +648,6 @@
         let globalState = {
             registeredUsers: [
                 { username: 'Patil', password: 'abc@12345', role: 'admin' },
-             { username: 'abcd', password: '12345678', role: 'user' },
             ],
             pendingUsers: [],
             pendingProfileEdits: [],
@@ -715,17 +714,51 @@
             }
         }
 
-        async function syncToCloud() {
-            try {
-                await fetch(JSON_BIN_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(globalState)
-                });
-            } catch (err) {
-                console.error('Failed to sync to cloud:', err);
+        async function syncFromCloud() {
+    try {
+        const res = await fetch(JSON_BIN_URL);
+        if (res.ok) {
+            const data = await res.json();
+            if (data && typeof data === 'object') {
+                globalState.registeredUsers = data.registeredUsers || globalState.registeredUsers;
+                globalState.pendingUsers = data.pendingUsers || [];
+                globalState.pendingProfileEdits = data.pendingProfileEdits || [];
+                if (data.eduNotesCatalog && data.eduNotesCatalog.length > 0) {
+                    globalState.eduNotesCatalog = data.eduNotesCatalog;
+                }
+                localStorage.setItem('eduDocsState', JSON.stringify(globalState));
+                return;
             }
         }
+    } catch (err) {
+        console.warn('Cloud sync offline. Loading local backup state.');
+    }
+
+    // Fallback to local storage if API fails or offline
+    const localData = localStorage.getItem('eduDocsState');
+    if (localData) {
+        globalState = JSON.parse(localData);
+    }
+}
+
+async function syncToCloud() {
+    // Save locally first so data isn't lost if network drops
+    localStorage.setItem('eduDocsState', JSON.stringify(globalState));
+
+    try {
+        const response = await fetch(JSON_BIN_URL, {
+            method: 'PUT', // Uses PUT instead of POST so npoint updates the bin
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(globalState)
+        });
+
+        if (!response.ok) {
+            console.error('Failed to sync to cloud. Status:', response.status);
+        }
+    } catch (err) {
+        console.error('Failed to sync to cloud:', err);
+    }
+}
 
         function switchView(viewId) {
             document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
@@ -971,18 +1004,17 @@
         }
 
         async function approveUserRegistration(index) {
-            const approved = globalState.pendingUsers.splice(index, 1)[0];
-            globalState.registeredUsers.push(approved);
-            await syncToCloud();
-            renderAdminPortal();
-        }
+    const approved = globalState.pendingUsers.splice(index, 1)[0];
+    globalState.registeredUsers.push(approved);
+    await syncToCloud();
+    renderAdminPortal();
+}
 
-        async function rejectUserRegistration(index) {
-            globalState.pendingUsers.splice(index, 1);
-            await syncToCloud();
-            renderAdminPortal();
-        }
-
+async function rejectUserRegistration(index) {
+    globalState.pendingUsers.splice(index, 1);
+    await syncToCloud();
+    renderAdminPortal();
+}
         async function approveProfileEdit(index) {
             const edit = globalState.pendingProfileEdits.splice(index, 1)[0];
             const user = globalState.registeredUsers.find(u => u.username === edit.originalUsername);
