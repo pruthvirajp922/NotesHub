@@ -41,7 +41,7 @@
             padding-bottom: 60px;
         }
 
-        /* Header / Navbar */
+        /* Header / Navbar (Auto-Adapts for Mobile) */
         header {
             position: sticky;
             top: 0;
@@ -139,7 +139,7 @@
             gap: 10px;
         }
 
-        /* Grid Layout */
+        /* Grid Layout (Desktop to Mobile Responsive) */
         .notes-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -179,23 +179,6 @@
             gap: 12px;
         }
 
-        /* Category Section Header */
-        .category-header {
-            grid-column: 1 / -1;
-            margin-top: 20px;
-            margin-bottom: 6px;
-        }
-
-        .category-header h3 {
-            color: var(--accent-primary);
-            border-bottom: 1px solid var(--glass-border);
-            padding-bottom: 8px;
-            font-size: 1.15rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
         /* Inputs & Forms */
         .form-group {
             margin-bottom: 16px;
@@ -228,7 +211,7 @@
             box-shadow: 0 0 12px rgba(88, 166, 253, 0.25);
         }
 
-        /* PASSWORD STRENGTH METER */
+        /* GOOGLE-STYLE PASSWORD STRENGTH METER */
         .strength-bar-container {
             height: 6px;
             width: 100%;
@@ -274,6 +257,10 @@
 
         .rule-item.valid {
             color: #3fb950;
+        }
+
+        .rule-item.valid i::before {
+            content: "\f00c";
         }
 
         /* Tables */
@@ -324,10 +311,7 @@
         /* Modal Overlay */
         .modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.85);
             backdrop-filter: blur(8px);
             display: none;
@@ -349,21 +333,93 @@
             width: 100%;
             max-width: 440px;
             padding: 28px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
             position: relative;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 18px; right: 18px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .notice-banner {
+            background: rgba(56, 139, 253, 0.1);
+            border: 1px solid rgba(56, 139, 253, 0.3);
+            border-radius: var(--radius-md);
+            padding: 12px 18px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.88rem;
+            color: var(--accent-primary);
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
+            from { opacity: 0; transform: scale(0.96); }
             to { opacity: 1; transform: scale(1); }
         }
 
-        .view-section {
-            display: none;
+        .view-section { display: none; }
+        .view-section.active { display: block; }
+
+        /* MOBILE SPECIFIC AUTO-CONVERSION MEDIA QUERIES */
+        @media (max-width: 600px) {
+            header {
+                padding: 12px 16px;
+            }
+            .brand span {
+                font-size: 1.1rem;
+            }
+            .nav-actions {
+                width: 100%;
+                justify-content: space-between;
+                margin-top: 6px;
+            }
+            .nav-actions .btn {
+                flex: 1;
+                font-size: 0.8rem;
+                padding: 8px 10px;
+            }
+            .glass-card {
+                padding: 16px;
+            }
+            .notes-grid {
+                grid-template-columns: 1fr;
+            }
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .section-header > div {
+                width: 100% !important;
+            }
+            .strength-rules {
+                grid-template-columns: 1fr;
+            }
+        }
+        /* Category Section Header */
+        .category-header {
+            grid-column: 1 / -1;
+            margin-top: 20px;
+            margin-bottom: 6px;
         }
 
-        .view-section.active {
-            display: block;
+        .category-header h3 {
+            color: var(--accent-primary);
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 8px;
+            font-size: 1.15rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
     </style>
 </head>
@@ -371,604 +427,630 @@
 
     <header>
         <div class="brand" onclick="switchView('home-view')">
-            <i class="fa-solid fa-graduation-cap"></i> EduDocs Portal
+            <i class="fa-solid fa-graduation-cap"></i>
+            <span>EduDocs Portal</span>
         </div>
-        <div class="nav-actions" id="nav-actions">
-            </div>
+        <div class="nav-actions">
+            <button class="btn btn-secondary" onclick="switchView('home-view')">
+                <i class="fa-solid fa-book-open"></i> Notes
+            </button>
+            <div id="auth-buttons-container" style="display: flex; gap: 8px; flex: 1;">
+                </div>
+        </div>
     </header>
 
     <div class="container">
-        
-        <div id="home-view" class="view-section active">
+
+        <div id="visitor-notice" class="notice-banner">
+            <i class="fa-solid fa-circle-info fa-lg"></i>
+            <span><strong>Guest Access:</strong> Viewing materials. Please <strong>Log In</strong> to download files.</span>
+        </div>
+
+        <section id="home-view" class="view-section active">
             <div class="glass-card">
                 <div class="section-header">
                     <div class="section-title">
-                        <i class="fa-solid fa-book-open" style="color: var(--accent-primary);"></i> Study Resources
+                        <i class="fa-solid fa-folder-open text-primary"></i> Study Materials & Notes
                     </div>
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap; width: 100%; max-width: 500px;">
-                        <input type="text" id="search-input" class="form-control" placeholder="Search notes..." oninput="handleSearch(this.value)" style="flex: 1;">
-                        <select id="category-filter" class="form-control" onchange="handleCategoryFilter(this.value)" style="width: auto;">
-                            <option value="All">All Categories</option>
-                            <option value="Detailed Notes">Detailed Notes</option>
-                            <option value="Short Notes">Short Notes</option>
-                            <option value="Mind Maps">Mind Maps</option>
-                        </select>
+                    <div style="max-width: 320px; width: 100%;">
+                        <input type="text" class="form-control" id="search-notes-input" placeholder="Search notes..." onkeyup="filterNotes()">
                     </div>
                 </div>
 
-                <div id="notes-container" class="notes-grid">
+                <div class="notes-grid" id="notes-container">
                     </div>
             </div>
-        </div>
+        </section>
 
-        <div id="admin-view" class="view-section">
-            <div class="glass-card">
+
+        <section id="profile-view" class="view-section">
+            <div class="glass-card" style="max-width: 550px; margin: 0 auto;">
                 <div class="section-header">
                     <div class="section-title">
-                        <i class="fa-solid fa-shield-halved" style="color: #3fb950;"></i> Admin Control Panel
+                        <i class="fa-solid fa-user-gear text-primary"></i> Edit Profile Request
                     </div>
-                    <button class="btn btn-secondary" onclick="switchView('home-view')">
-                        <i class="fa-solid fa-arrow-left"></i> Back to Notes
+                    <span id="user-status-tag" class="badge badge-success">Active</span>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.03); border-radius: var(--radius-md); padding: 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 14px;">
+                    <i class="fa-solid fa-circle-user fa-2xl" style="color: var(--accent-primary);"></i>
+                    <div>
+                        <h4 id="profile-display-username" style="font-size: 1.05rem; font-weight: 700;">-</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Standard Student Account</p>
+                    </div>
+                </div>
+
+                <form id="edit-profile-form" onsubmit="handleProfileEditSubmit(event)">
+                    <div class="form-group">
+                        <label>New Username</label>
+                        <input type="text" id="edit-username-input" class="form-control" placeholder="Enter new username" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>New Password (Optional)</label>
+                        <input type="password" id="edit-password-input" class="form-control" placeholder="Leave blank to keep existing password">
+                    </div>
+
+                    <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 20px;">
+                        <i class="fa-solid fa-clock-rotate-left me-1"></i> Profile edits require Admin approval before updating live.
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                        <i class="fa-solid fa-paper-plane"></i> Submit Edit Request
                     </button>
-                </div>
+                </form>
+            </div>
+        </section>
 
-                <div style="margin-bottom: 30px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-                        <h3 style="font-size: 1rem; color: var(--accent-primary);">Upload & Manage Notes</h3>
-                        <button class="btn btn-primary" onclick="openAddNoteModal()">
-                            <i class="fa-solid fa-plus"></i> Add New Note
-                        </button>
-                    </div>
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Title</th>
-                                    <th>Category</th>
-                                    <th>URL</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="admin-notes-table">
-                                </tbody>
-                        </table>
+
+        <section id="admin-view" class="view-section">
+            
+            <div class="glass-card">
+                <div class="section-header">
+                    <div class="section-title" style="color: #d29922;">
+                        <i class="fa-solid fa-user-clock"></i> Pending Registration Requests
                     </div>
                 </div>
-
-                <div>
-                    <h3 style="font-size: 1rem; color: var(--accent-primary); margin-bottom: 14px;">User Approval Requests</h3>
-                    <div class="table-responsive" style="margin-bottom: 24px;">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Username</th>
-                                    <th>Role</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="pending-users-table">
-                                </tbody>
-                        </table>
-                    </div>
-
-                    <h3 style="font-size: 1rem; color: var(--accent-primary); margin-bottom: 14px;">Approved Users</h3>
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Username</th>
-                                    <th>Role</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="approved-users-table">
-                                </tbody>
-                        </table>
-                    </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Requested Role</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-pending-users-tbody"></tbody>
+                    </table>
                 </div>
             </div>
-        </div>
+
+            <div class="glass-card">
+                <div class="section-header">
+                    <div class="section-title" style="color: #58a6ff;">
+                        <i class="fa-solid fa-pen-to-square"></i> Pending Profile Edit Requests
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Current</th>
+                                <th>Requested New</th>
+                                <th>New Password</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-pending-edits-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <div class="section-header">
+                    <div class="section-title">
+                        <i class="fa-solid fa-users-gear text-primary"></i> Active Registered Users
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Password</th>
+                                <th>Role</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-active-users-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+
     </div>
 
-    <div id="auth-modal" class="modal-overlay">
+
+    <div class="modal-overlay" id="auth-modal">
         <div class="modal-body">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h3 id="auth-modal-title" style="font-size: 1.2rem; font-weight: 700;">Account Access</h3>
-                <i class="fa-solid fa-xmark" onclick="closeAuthModal()" style="cursor: pointer; font-size: 1.2rem; color: var(--text-muted);"></i>
+            <button class="modal-close" onclick="closeAuthModal()"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div id="login-form-wrapper">
+                <h3 style="margin-bottom: 6px; font-weight: 700;">Account Login</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;" id="login-modal-subtext">Sign in to download notes and manage your account.</p>
+
+                <form onsubmit="handleLoginSubmit(event)">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="login-username" class="form-control" required placeholder="Enter username">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="login-password" class="form-control" required placeholder="Enter password">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 10px;">
+                        <i class="fa-solid fa-right-to-bracket"></i> Log In
+                    </button>
+                </form>
+                <div style="text-align: center; margin-top: 16px; font-size: 0.85rem; color: var(--text-muted);">
+                    Don't have an account? <a href="#" style="color: var(--accent-primary);" onclick="toggleAuthForm('signup')">Create Account</a>
+                </div>
             </div>
 
-            <form id="login-form" onsubmit="handleLoginSubmit(event)">
-                <div class="form-group">
-                    <label>Username</label>
-                    <input type="text" id="login-username" class="form-control" required placeholder="Enter username">
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="login-password" class="form-control" required placeholder="Enter password">
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Login</button>
-                <p style="text-align: center; margin-top: 14px; font-size: 0.85rem; color: var(--text-muted);">
-                    Don't have an account? <a href="#" onclick="toggleAuthMode('signup')" style="color: var(--accent-primary); font-weight: 600;">Request Access</a>
-                </p>
-            </form>
+            <div id="signup-form-wrapper" style="display: none;">
+                <h3 style="margin-bottom: 6px; font-weight: 700;">Create Account</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Use a strong password to protect your account.</p>
 
-            <form id="signup-form" onsubmit="handleSignupSubmit(event)" style="display: none;">
-                <div class="form-group">
-                    <label>Requested Username</label>
-                    <input type="text" id="signup-username" class="form-control" required placeholder="Choose a username">
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="signup-password" class="form-control" required placeholder="Create a strong password" oninput="evaluatePasswordStrength(this.value)">
-                    
-                    <div class="strength-bar-container">
-                        <div class="strength-segment" id="seg-1"></div>
-                        <div class="strength-segment" id="seg-2"></div>
-                        <div class="strength-segment" id="seg-3"></div>
-                        <div class="strength-segment" id="seg-4"></div>
+                <form onsubmit="handleSignupSubmit(event)">
+                    <div class="form-group">
+                        <label>Choose Username</label>
+                        <input type="text" id="signup-username" class="form-control" required placeholder="Choose a username">
                     </div>
-                    <div class="strength-text">
-                        <span>Password Strength:</span>
-                        <span id="strength-label" style="color: var(--text-muted);">Too Weak</span>
-                    </div>
+                    <div class="form-group">
+                        <label>Choose Password</label>
+                        <input type="password" id="signup-password" class="form-control" required placeholder="Enter strong password" oninput="checkPasswordStrength(this.value)">
+                        
+                        <div class="strength-bar-container">
+                            <div class="strength-segment" id="seg-1"></div>
+                            <div class="strength-segment" id="seg-2"></div>
+                            <div class="strength-segment" id="seg-3"></div>
+                            <div class="strength-segment" id="seg-4"></div>
+                        </div>
+                        <div class="strength-text">
+                            <span>Password Strength:</span>
+                            <span id="strength-label" style="font-weight: 700;">Too Short</span>
+                        </div>
 
-                    <div class="strength-rules">
-                        <div class="rule-item" id="rule-length"><i class="fa-solid fa-circle" style="font-size: 6px;"></i> 8+ Characters</div>
-                        <div class="rule-item" id="rule-number"><i class="fa-solid fa-circle" style="font-size: 6px;"></i> Includes Number</div>
-                        <div class="rule-item" id="rule-symbol"><i class="fa-solid fa-circle" style="font-size: 6px;"></i> Includes Symbol</div>
-                        <div class="rule-item" id="rule-case"><i class="fa-solid fa-circle" style="font-size: 6px;"></i> Upper & Lower</div>
+                        <div class="strength-rules">
+                            <div class="rule-item" id="rule-length"><i class="fa-regular fa-circle"></i> At least 8 characters</div>
+                            <div class="rule-item" id="rule-number"><i class="fa-regular fa-circle"></i> At least 1 number</div>
+                            <div class="rule-item" id="rule-upper"><i class="fa-regular fa-circle"></i> Uppercase letter</div>
+                            <div class="rule-item" id="rule-symbol"><i class="fa-regular fa-circle"></i> Special character (@#$)</div>
+                        </div>
                     </div>
+                    <button type="submit" id="signup-submit-btn" class="btn btn-success" style="width: 100%; justify-content: center; margin-top: 14px;">
+                        <i class="fa-solid fa-user-plus"></i> Submit Registration
+                    </button>
+                </form>
+                <div style="text-align: center; margin-top: 16px; font-size: 0.85rem; color: var(--text-muted);">
+                    Already have an account? <a href="#" style="color: var(--accent-primary);" onclick="toggleAuthForm('login')">Log In</a>
                 </div>
-                <button type="submit" id="signup-submit-btn" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Submit Approval Request</button>
-                <p style="text-align: center; margin-top: 14px; font-size: 0.85rem; color: var(--text-muted);">
-                    Already registered? <a href="#" onclick="toggleAuthMode('login')" style="color: var(--accent-primary); font-weight: 600;">Login Here</a>
-                </p>
-            </form>
+            </div>
+
         </div>
     </div>
 
-    <div id="note-modal" class="modal-overlay">
-        <div class="modal-body">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h3 style="font-size: 1.2rem; font-weight: 700;">Add Study Material</h3>
-                <i class="fa-solid fa-xmark" onclick="closeNoteModal()" style="cursor: pointer; font-size: 1.2rem; color: var(--text-muted);"></i>
-            </div>
-            <form onsubmit="handleAddNoteSubmit(event)">
-                <div class="form-group">
-                    <label>Material Title</label>
-                    <input type="text" id="note-title-input" class="form-control" required placeholder="e.g. Science Chapter 1 Notes">
-                </div>
-                <div class="form-group">
-                    <label>Category</label>
-                    <select id="note-category-input" class="form-control" required>
-                        <option value="Detailed Notes">Detailed Notes</option>
-                        <option value="Short Notes">Short Notes</option>
-                        <option value="Mind Maps">Mind Maps</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Google Drive PDF URL</label>
-                    <input type="url" id="note-url-input" class="form-control" required placeholder="https://drive.google.com/file/d/...">
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Save Material</button>
-            </form>
-        </div>
-    </div>
 
     <script>
-        const JSONBIN_URL = 'https://api.jsonbin.io/v3/b/67bbf083ad19ca34f81014e7';
-        const API_KEY = '$2a$10$v0sXfIsE2dO/S4fV8.g9y.U7/4X386fDq1GjC0l7yB/lH6Z4e1q6.';
+        const JSON_BIN_URL = 'https://api.npoint.io/088d8b671a5bdff0e7cb';
 
         let globalState = {
-            registeredUsers: [],
+            registeredUsers: [
+                { username: 'Patil', password: 'abc@12345', role: 'admin' },
+             { username: 'abcd', password: '12345678', role: 'user' },
+            ],
             pendingUsers: [],
-            eduNotesCatalog: []
+            pendingProfileEdits: [],
+            eduNotesCatalog: [
+    // -----------------------------------------------------------------
+    // CATEGORY 1: DETAILED NOTES
+    // (Files that do NOT contain "short notes" or "mind map/maps")
+    // -----------------------------------------------------------------
+    { id: '1', name: 'Science 1 Detailed Notes', category: 'Detailed Notes', url: 'Class 10 S & T Part 1 .pdf' },
+    { id: '2', name: 'Science 2 Detailed Notes', category: 'Detailed Notes', url: 'Class 10 S & T Part 2 .pdf' },
+    { id: '3', name: 'Geography Detailed Notes', category: 'Detailed Notes', url: 'Geography notes.pdf' },
+    { id: '4', name: 'History Detailed Notes', category: 'Detailed Notes', url: 'History Notes .pdf' },
+
+    // -----------------------------------------------------------------
+    // CATEGORY 2: SHORT NOTES
+    // (Files that contain "short notes")
+    // -----------------------------------------------------------------
+    { id: '5', name: 'Science 1 Short Notes Pdf 2', category: 'Short Notes', url: 'Short Science 1 Notes.pdf' },
+    { id: '6', name: 'Science 2 Short Notes Pdf 2', category: 'Short Notes', url: 'Short Science 2 notes.pdf' },
+    { id: '7', name: 'Geography Short Notes', category: 'Short Notes', url: 'Geography short notes.pdf' },
+    { id: '8', name: 'History Short Notes', category: 'Short Notes', url: 'History short notes.pdf' },
+    { id: '9', name: 'Science 1 Short Notes', category: 'Short Notes', url: 'Science 1 short notes.pdf' },
+    { id: '10', name: 'Science 2 Short Notes', category: 'Short Notes', url: 'Science 2 short notes.pdf' },
+    { id: '11', name: 'Math 1 Short Notes', category: 'Short Notes', url: 'Math 1 short notes.pdf' },
+    { id: '12', name: 'Math 2 Short Notes', category: 'Short Notes', url: 'Math 2 short notes.pdf' },
+
+    // -----------------------------------------------------------------
+    // CATEGORY 3: MIND MAPS
+    // (Files that contain "mind map" or "mind maps" - names kept as-is)
+    // -----------------------------------------------------------------
+    { id: '13', name: 'Science 1 mind maps.pdf', category: 'Mind Maps', url: 'Science 1 mind maps.pdf' },
+    { id: '14', name: 'Science 2 mind maps.pdf', category: 'Mind Maps', url: 'Science 2 mind maps.pdf' },
+    { id: '15', name: 'Math 1 mind map.pdf', category: 'Mind Maps', url: 'Math 1 mind map.pdf' },
+    { id: '16', name: 'Math 2 mind map.pdf', category: 'Mind Maps', url: 'Math 2 mind map.pdf' }
+          ]
         };
 
         let currentUser = null;
-        let searchQuery = '';
-        let selectedCategoryFilter = 'All';
         let isPasswordStrongEnough = false;
 
-        // Initialize App
         window.onload = async function() {
             await syncFromCloud();
             renderNavbar();
             renderNotes();
+            switchView('home-view');
         };
 
-        // Cloud Operations
         async function syncFromCloud() {
             try {
-                const response = await fetch(`${JSONBIN_URL}/latest`, {
-                    method: 'GET',
-                    headers: { 'X-Master-Key': API_KEY }
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    globalState = data.record || {};
-                    
-                    if (!Array.isArray(globalState.registeredUsers)) globalState.registeredUsers = [];
-                    if (!Array.isArray(globalState.pendingUsers)) globalState.pendingUsers = [];
-                    if (!Array.isArray(globalState.eduNotesCatalog)) globalState.eduNotesCatalog = [];
+                const res = await fetch(JSON_BIN_URL);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && typeof data === 'object') {
+                        globalState.registeredUsers = data.registeredUsers || globalState.registeredUsers;
+                        globalState.pendingUsers = data.pendingUsers || [];
+                        globalState.pendingProfileEdits = data.pendingProfileEdits || [];
+                        if (data.eduNotesCatalog && data.eduNotesCatalog.length > 0) {
+                            globalState.eduNotesCatalog = data.eduNotesCatalog;
+                        }
+                    }
                 }
-            } catch (error) {
-                console.error("Failed to load cloud state:", error);
+            } catch (err) {
+                console.warn('Cloud sync offline. Using local memory state.');
             }
         }
 
         async function syncToCloud() {
             try {
-                if (!Array.isArray(globalState.registeredUsers)) globalState.registeredUsers = [];
-                if (!Array.isArray(globalState.pendingUsers)) globalState.pendingUsers = [];
-                if (!Array.isArray(globalState.eduNotesCatalog)) globalState.eduNotesCatalog = [];
-
-                await fetch(JSONBIN_URL, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Master-Key': API_KEY
-                    },
+                await fetch(JSON_BIN_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(globalState)
                 });
-            } catch (error) {
-                console.error("Failed to save cloud state:", error);
+            } catch (err) {
+                console.error('Failed to sync to cloud:', err);
             }
         }
 
-        // Navigation & Views
         function switchView(viewId) {
-            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
-            if (viewId === 'admin-view') {
-                renderAdminData();
-            }
+
+            if (viewId === 'home-view') renderNotes();
+            else if (viewId === 'profile-view') renderProfileView();
+            else if (viewId === 'admin-view') renderAdminPortal();
         }
 
         function renderNavbar() {
-            const container = document.getElementById('nav-actions');
+            const container = document.getElementById('auth-buttons-container');
+            const notice = document.getElementById('visitor-notice');
+
             if (!currentUser) {
+                notice.style.display = 'flex';
                 container.innerHTML = `
-                    <button class="btn btn-secondary" onclick="openAuthModal('login')">
-                        <i class="fa-solid fa-right-to-bracket"></i> Login
-                    </button>
-                    <button class="btn btn-primary" onclick="openAuthModal('signup')">
-                        <i class="fa-solid fa-user-plus"></i> Request Access
+                    <button class="btn btn-primary" style="width:100%;" onclick="openAuthModal('login')">
+                        <i class="fa-solid fa-right-to-bracket"></i> Log In / Register
                     </button>
                 `;
             } else {
-                let adminBtn = currentUser.role === 'admin' ? `
-                    <button class="btn btn-warning" onclick="switchView('admin-view')">
-                        <i class="fa-solid fa-user-shield"></i> Admin Panel
-                    </button>
-                ` : '';
-
-                container.innerHTML = `
-                    <span style="font-size: 0.9rem; font-weight: 600; color: var(--accent-primary);">
-                        <i class="fa-solid fa-circle-user"></i> ${currentUser.username}
-                    </span>
-                    ${adminBtn}
-                    <button class="btn btn-secondary" onclick="handleLogout()">
-                        <i class="fa-solid fa-power-off"></i> Logout
-                    </button>
-                `;
+                notice.style.display = 'none';
+                if (currentUser.username === 'Patil' || currentUser.role === 'admin') {
+                    container.innerHTML = `
+                        <button class="btn btn-warning" onclick="switchView('admin-view')">
+                            <i class="fa-solid fa-shield-halved"></i> Admin
+                        </button>
+                        <button class="btn btn-secondary" onclick="handleLogout()">
+                            <i class="fa-solid fa-power-off"></i>
+                        </button>
+                    `;
+                } else {
+                    container.innerHTML = `
+                        <button class="btn btn-secondary" onclick="switchView('profile-view')">
+                            <i class="fa-solid fa-circle-user"></i> ${currentUser.username}
+                        </button>
+                        <button class="btn btn-secondary" onclick="handleLogout()">
+                            <i class="fa-solid fa-power-off"></i>
+                        </button>
+                    `;
+                }
             }
         }
 
-        // Search & Filter
-        function handleSearch(val) {
-            searchQuery = val;
-            renderNotes();
-        }
-
-        function handleCategoryFilter(val) {
-            selectedCategoryFilter = val;
-            renderNotes();
-        }
-
-        // Render Notes Grid Grouped by Category Titles
-        function renderNotes() {
+        function renderNotes(filter = '') {
             const container = document.getElementById('notes-container');
-            const categories = ['Detailed Notes', 'Short Notes', 'Mind Maps'];
+            const notes = globalState.eduNotesCatalog.filter(n => n.name.toLowerCase().includes(filter.toLowerCase()));
 
-            let filteredList = (globalState.eduNotesCatalog || []).filter(note => {
-                const matchesSearch = note.name.toLowerCase().includes(searchQuery.toLowerCase());
-                const matchesCategory = selectedCategoryFilter === 'All' || note.category === selectedCategoryFilter;
-                return matchesSearch && matchesCategory;
-            });
-
-            if (filteredList.length === 0) {
+            if (notes.length === 0) {
                 container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">No study materials found.</div>`;
                 return;
             }
 
-            let htmlOutput = '';
-
-            categories.forEach(categoryName => {
-                if (selectedCategoryFilter !== 'All' && selectedCategoryFilter !== categoryName) {
-                    return;
-                }
-
-                const categoryNotes = filteredList.filter(n => n.category === categoryName);
-
-                if (categoryNotes.length > 0) {
-                    htmlOutput += `
-                        <div class="category-header">
-                            <h3><i class="fa-solid fa-layer-group"></i> ${categoryName}</h3>
+            container.innerHTML = notes.map(note => `
+                <div class="note-card">
+                    <div>
+                        <div class="note-meta">
+                            <span><i class="fa-solid fa-file-pdf"></i> ${note.category || 'General'}</span>
                         </div>
-                    `;
-
-                    categoryNotes.forEach(note => {
-                        htmlOutput += `
-                            <div class="note-card">
-                                <div>
-                                    <div class="note-meta">
-                                        <span class="badge badge-secondary" style="background: rgba(88, 166, 253, 0.15); color: var(--accent-primary); border: 1px solid rgba(88, 166, 253, 0.3);">${note.category}</span>
-                                    </div>
-                                    <div class="note-title">${note.name}</div>
-                                </div>
-                                <div style="margin-top: 16px;">
-                                    <button class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="handleDownloadNote('${note.name.replace(/'/g, "\\'")}', '${note.url}')">
-                                        <i class="fa-solid fa-download"></i> Download PDF
-                                    </button>
-                                </div>
-                            </div>
-                        `;
-                    });
-                }
-            });
-
-            container.innerHTML = htmlOutput;
+                        <div class="note-title">${note.name}</div>
+                    </div>
+                    <div style="margin-top: 16px;">
+                        <button class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="handleDownloadNote('${note.name.replace(/'/g, "\\'")}', '${note.url}')">
+                            <i class="fa-solid fa-download"></i> Download PDF
+                        </button>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        function handleDownloadNote(title, url) {
+        function filterNotes() {
+            const query = document.getElementById('search-notes-input').value;
+            renderNotes(query);
+        }
+
+        function handleDownloadNote(fileName, url) {
             if (!currentUser) {
-                alert('Please login or register to access and download study materials.');
-                openAuthModal('login');
+                openAuthModal('login', 'Please log in to your account to download notes.');
                 return;
             }
-            window.open(url, '_blank');
+
+            const downloadUrl = (url && url !== '#') ? url : fileName;
+            const link = document.createElement('a');
+            link.href = encodeURIComponent(downloadUrl);
+            link.target = '_blank';
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
-        // Password Strength Evaluator
-        function evaluatePasswordStrength(password) {
-            const hasLength = password.length >= 8;
-            const hasNumber = /\d/.test(password);
-            const hasSymbol = /[^A-Za-z0-9]/.test(password);
-            const hasCase = /[a-z]/.test(password) && /[A-Z]/.test(password);
+        /* GOOGLE-STYLE PASSWORD STRENGTH EVALUATOR */
+        function checkPasswordStrength(password) {
+            const lengthValid = password.length >= 8;
+            const numberValid = /\d/.test(password);
+            const upperValid = /[A-Z]/.test(password);
+            const symbolValid = /[^A-Za-z0-9]/.test(password);
 
-            updateRuleUI('rule-length', hasLength);
-            updateRuleUI('rule-number', hasNumber);
-            updateRuleUI('rule-symbol', hasSymbol);
-            updateRuleUI('rule-case', hasCase);
+            // Update UI Checklist Items
+            updateRuleUI('rule-length', lengthValid);
+            updateRuleUI('rule-number', numberValid);
+            updateRuleUI('rule-upper', upperValid);
+            updateRuleUI('rule-symbol', symbolValid);
 
             let score = 0;
-            if (hasLength) score++;
-            if (hasNumber) score++;
-            if (hasSymbol) score++;
-            if (hasCase) score++;
+            if (lengthValid) score++;
+            if (numberValid) score++;
+            if (upperValid) score++;
+            if (symbolValid) score++;
 
-            const segs = [
-                document.getElementById('seg-1'),
-                document.getElementById('seg-2'),
-                document.getElementById('seg-3'),
-                document.getElementById('seg-4')
-            ];
-
-            segs.forEach(s => s.style.background = 'transparent');
+            const segs = [document.getElementById('seg-1'), document.getElementById('seg-2'), document.getElementById('seg-3'), document.getElementById('seg-4')];
             const label = document.getElementById('strength-label');
 
-            if (score === 0) {
-                label.innerText = 'Too Weak';
+            segs.forEach(s => s.style.background = 'transparent');
+
+            if (password.length === 0) {
+                label.innerText = 'Too Short';
                 label.style.color = 'var(--text-muted)';
                 isPasswordStrongEnough = false;
-            } else if (score <= 2) {
+                return;
+            }
+
+            if (score === 1) {
                 segs[0].style.background = '#f85149';
-                if (score === 2) segs[1].style.background = '#f85149';
                 label.innerText = 'Weak';
                 label.style.color = '#f85149';
                 isPasswordStrongEnough = false;
-            } else if (score === 3) {
+            } else if (score === 2) {
                 segs[0].style.background = '#d29922';
                 segs[1].style.background = '#d29922';
-                segs[2].style.background = '#d29922';
-                label.innerText = 'Medium';
+                label.innerText = 'Fair';
                 label.style.color = '#d29922';
+                isPasswordStrongEnough = false;
+            } else if (score === 3) {
+                segs[0].style.background = '#58a6ff';
+                segs[1].style.background = '#58a6ff';
+                segs[2].style.background = '#58a6ff';
+                label.innerText = 'Good';
+                label.style.color = '#58a6ff';
                 isPasswordStrongEnough = true;
-            } else {
+            } else if (score === 4) {
                 segs.forEach(s => s.style.background = '#3fb950');
-                label.innerText = 'Strong';
+                label.innerText = 'Strong (Google standard)';
                 label.style.color = '#3fb950';
                 isPasswordStrongEnough = true;
             }
         }
 
-        function updateRuleUI(id, isValid) {
-            const el = document.getElementById(id);
-            if (isValid) el.classList.add('valid');
-            else el.classList.remove('valid');
+        function updateRuleUI(elementId, isValid) {
+            const el = document.getElementById(elementId);
+            if (isValid) {
+                el.classList.add('valid');
+            } else {
+                el.classList.remove('valid');
+            }
         }
 
-        // Modals Logic
-        function openAuthModal(mode) {
+        function renderProfileView() {
+            if (!currentUser) return;
+            document.getElementById('profile-display-username').innerText = currentUser.username;
+            document.getElementById('edit-username-input').value = currentUser.username;
+            document.getElementById('edit-password-input').value = '';
+
+            const hasPending = globalState.pendingProfileEdits.some(e => e.originalUsername === currentUser.username);
+            const statusTag = document.getElementById('user-status-tag');
+
+            if (hasPending) {
+                statusTag.className = 'badge badge-warning';
+                statusTag.innerText = 'Edit Pending Approval';
+            } else {
+                statusTag.className = 'badge badge-success';
+                statusTag.innerText = 'Active';
+            }
+        }
+
+        async function handleProfileEditSubmit(e) {
+            e.preventDefault();
+            const newUsername = document.getElementById('edit-username-input').value.trim();
+            const newPassword = document.getElementById('edit-password-input').value.trim();
+
+            if (!newUsername) return;
+
+            globalState.pendingProfileEdits = globalState.pendingProfileEdits.filter(p => p.originalUsername !== currentUser.username);
+            globalState.pendingProfileEdits.push({
+                originalUsername: currentUser.username,
+                requestedUsername: newUsername,
+                requestedPassword: newPassword || null
+            });
+
+            await syncToCloud();
+            alert('Profile update request submitted! Waiting for Admin approval.');
+            renderProfileView();
+        }
+
+        function renderAdminPortal() {
+            const pendingBody = document.getElementById('admin-pending-users-tbody');
+            if (globalState.pendingUsers.length === 0) {
+                pendingBody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">No pending registration requests.</td></tr>`;
+            } else {
+                pendingBody.innerHTML = globalState.pendingUsers.map((u, index) => `
+                    <tr>
+                        <td><strong>${u.username}</strong></td>
+                        <td>${u.role || 'user'}</td>
+                        <td>
+                            <button class="btn btn-success" style="padding: 4px 8px; font-size: 0.75rem;" onclick="approveUserRegistration(${index})">Approve</button>
+                            <button class="btn btn-danger" style="padding: 4px 8px; font-size: 0.75rem;" onclick="rejectUserRegistration(${index})">Reject</button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            const editsBody = document.getElementById('admin-pending-edits-tbody');
+            if (globalState.pendingProfileEdits.length === 0) {
+                editsBody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">No pending profile edit requests.</td></tr>`;
+            } else {
+                editsBody.innerHTML = globalState.pendingProfileEdits.map((e, index) => `
+                    <tr>
+                        <td><strong>${e.originalUsername}</strong></td>
+                        <td style="color: var(--accent-primary);">${e.requestedUsername}</td>
+                        <td style="font-family: monospace;">${e.requestedPassword ? e.requestedPassword : '(Unchanged)'}</td>
+                        <td>
+                            <button class="btn btn-success" style="padding: 4px 8px; font-size: 0.75rem;" onclick="approveProfileEdit(${index})">Approve</button>
+                            <button class="btn btn-danger" style="padding: 4px 8px; font-size: 0.75rem;" onclick="rejectProfileEdit(${index})">Reject</button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            const activeBody = document.getElementById('admin-active-users-tbody');
+            activeBody.innerHTML = globalState.registeredUsers.map((u, index) => `
+                <tr>
+                    <td><strong>${u.username}</strong></td>
+                    <td style="font-family: monospace;">${u.password}</td>
+                    <td><span class="badge ${u.role === 'admin' ? 'badge-warning' : 'badge-success'}">${u.role || 'user'}</span></td>
+                    <td>
+                        ${u.username !== 'Patil' ? `
+                            <button class="btn btn-danger" style="padding: 4px 8px; font-size: 0.75rem;" onclick="removeActiveUser(${index})">Remove</button>
+                        ` : '<span style="color: var(--text-muted); font-size: 0.75rem;">Master Admin</span>'}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function approveUserRegistration(index) {
+            const approved = globalState.pendingUsers.splice(index, 1)[0];
+            globalState.registeredUsers.push(approved);
+            await syncToCloud();
+            renderAdminPortal();
+        }
+
+        async function rejectUserRegistration(index) {
+            globalState.pendingUsers.splice(index, 1);
+            await syncToCloud();
+            renderAdminPortal();
+        }
+
+        async function approveProfileEdit(index) {
+            const edit = globalState.pendingProfileEdits.splice(index, 1)[0];
+            const user = globalState.registeredUsers.find(u => u.username === edit.originalUsername);
+            if (user) {
+                user.username = edit.requestedUsername;
+                if (edit.requestedPassword) user.password = edit.requestedPassword;
+                if (currentUser && currentUser.username === edit.originalUsername) {
+                    currentUser.username = user.username;
+                    currentUser.password = user.password;
+                }
+            }
+            await syncToCloud();
+            renderNavbar();
+            renderAdminPortal();
+        }
+
+        async function rejectProfileEdit(index) {
+            globalState.pendingProfileEdits.splice(index, 1);
+            await syncToCloud();
+            renderAdminPortal();
+        }
+
+        async function removeActiveUser(index) {
+            if (confirm('Are you sure you want to remove this user?')) {
+                globalState.registeredUsers.splice(index, 1);
+                await syncToCloud();
+                renderAdminPortal();
+            }
+        }
+
+        function openAuthModal(mode = 'login', customText = null) {
             document.getElementById('auth-modal').classList.add('active');
-            toggleAuthMode(mode);
+            if (customText) {
+                document.getElementById('login-modal-subtext').innerText = customText;
+            } else {
+                document.getElementById('login-modal-subtext').innerText = 'Sign in to download notes and manage your account.';
+            }
+            toggleAuthForm(mode);
         }
 
         function closeAuthModal() {
             document.getElementById('auth-modal').classList.remove('active');
         }
 
-        function toggleAuthMode(mode) {
-            const loginForm = document.getElementById('login-form');
-            const signupForm = document.getElementById('signup-form');
-            const title = document.getElementById('auth-modal-title');
-
-            if (mode === 'signup') {
-                loginForm.style.display = 'none';
-                signupForm.style.display = 'block';
-                title.innerText = 'Request Access';
-            } else {
-                loginForm.style.display = 'block';
-                signupForm.style.display = 'none';
-                title.innerText = 'Account Access';
-            }
+        function toggleAuthForm(mode) {
+            document.getElementById('login-form-wrapper').style.display = mode === 'login' ? 'block' : 'none';
+            document.getElementById('signup-form-wrapper').style.display = mode === 'signup' ? 'block' : 'none';
         }
 
-        function openAddNoteModal() {
-            document.getElementById('note-modal').classList.add('active');
-        }
-
-        function closeNoteModal() {
-            document.getElementById('note-modal').classList.remove('active');
-        }
-
-        // Admin Management Operations
-        function renderAdminData() {
-            if (!globalState.registeredUsers) globalState.registeredUsers = [];
-            if (!globalState.pendingUsers) globalState.pendingUsers = [];
-            if (!globalState.eduNotesCatalog) globalState.eduNotesCatalog = [];
-
-            // Render Pending Users Table
-            const pendingTable = document.getElementById('pending-users-table');
-            if (globalState.pendingUsers.length === 0) {
-                pendingTable.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">No pending registration requests.</td></tr>`;
-            } else {
-                pendingTable.innerHTML = globalState.pendingUsers.map((u, i) => `
-                    <tr>
-                        <td>${u.username}</td>
-                        <td>${u.role}</td>
-                        <td><span class="badge badge-warning">Pending</span></td>
-                        <td>
-                            <button class="btn btn-success" style="padding: 6px 12px; min-height: unset; font-size: 0.78rem;" onclick="approveUser(${i})">
-                                <i class="fa-solid fa-check"></i> Approve
-                            </button>
-                            <button class="btn btn-danger" style="padding: 6px 12px; min-height: unset; font-size: 0.78rem;" onclick="rejectUser(${i})">
-                                <i class="fa-solid fa-xmark"></i> Reject
-                            </button>
-                        </td>
-                    </tr>
-                `).join('');
-            }
-
-            // Render Approved Users Table
-            const approvedTable = document.getElementById('approved-users-table');
-            if (globalState.registeredUsers.length === 0) {
-                approvedTable.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">No approved users.</td></tr>`;
-            } else {
-                approvedTable.innerHTML = globalState.registeredUsers.map((u, i) => `
-                    <tr>
-                        <td>${u.username}</td>
-                        <td>${u.role}</td>
-                        <td>
-                            ${u.role !== 'admin' ? `
-                                <button class="btn btn-danger" style="padding: 6px 12px; min-height: unset; font-size: 0.78rem;" onclick="revokeUser(${i})">
-                                    <i class="fa-solid fa-trash"></i> Revoke
-                                </button>
-                            ` : '<span style="color: var(--text-muted); font-size: 0.8rem;">System Admin</span>'}
-                        </td>
-                    </tr>
-                `).join('');
-            }
-
-            // Render Admin Notes Table
-            const notesTable = document.getElementById('admin-notes-table');
-            if (globalState.eduNotesCatalog.length === 0) {
-                notesTable.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">No notes created yet.</td></tr>`;
-            } else {
-                notesTable.innerHTML = globalState.eduNotesCatalog.map((n, i) => `
-                    <tr>
-                        <td>${n.name}</td>
-                        <td>${n.category}</td>
-                        <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${n.url}</td>
-                        <td>
-                            <button class="btn btn-danger" style="padding: 6px 12px; min-height: unset; font-size: 0.78rem;" onclick="deleteNote(${i})">
-                                <i class="fa-solid fa-trash"></i> Delete
-                            </button>
-                        </td>
-                    </tr>
-                `).join('');
-            }
-        }
-
-        async function approveUser(index) {
-            if (!globalState.registeredUsers) globalState.registeredUsers = [];
-            if (!globalState.pendingUsers) globalState.pendingUsers = [];
-
-            const user = globalState.pendingUsers[index];
-            if (user) {
-                globalState.registeredUsers.push(user);
-                globalState.pendingUsers.splice(index, 1);
-                await syncToCloud();
-                renderAdminData();
-            }
-        }
-
-        async function rejectUser(index) {
-            if (!globalState.pendingUsers) globalState.pendingUsers = [];
-            globalState.pendingUsers.splice(index, 1);
-            await syncToCloud();
-            renderAdminData();
-        }
-
-        async function revokeUser(index) {
-            if (!globalState.registeredUsers) globalState.registeredUsers = [];
-            globalState.registeredUsers.splice(index, 1);
-            await syncToCloud();
-            renderAdminData();
-        }
-
-        async function handleAddNoteSubmit(e) {
-            e.preventDefault();
-            const name = document.getElementById('note-title-input').value.trim();
-            const category = document.getElementById('note-category-input').value;
-            const url = document.getElementById('note-url-input').value.trim();
-
-            if (!globalState.eduNotesCatalog) globalState.eduNotesCatalog = [];
-
-            globalState.eduNotesCatalog.push({ name, category, url });
-            await syncToCloud();
-
-            closeNoteModal();
-            renderNotes();
-            renderAdminData();
-            alert('Study material added successfully!');
-        }
-
-        async function deleteNote(index) {
-            if (confirm('Are you sure you want to delete this study material?')) {
-                if (!globalState.eduNotesCatalog) globalState.eduNotesCatalog = [];
-                globalState.eduNotesCatalog.splice(index, 1);
-                await syncToCloud();
-                renderNotes();
-                renderAdminData();
-            }
-        }
-
-        // User Auth Handlers
         async function handleLoginSubmit(e) {
             e.preventDefault();
             const uInput = document.getElementById('login-username').value.trim();
             const pInput = document.getElementById('login-password').value.trim();
 
-            // Check hardcoded admin fallback
-            if (uInput === 'admin' && pInput === 'admin123') {
-                currentUser = { username: 'Admin', role: 'admin' };
-                renderNavbar();
-                closeAuthModal();
-                alert('Logged in as Admin!');
-                return;
-            }
+            await syncFromCloud();
+            const match = globalState.registeredUsers.find(u => u.username === uInput && u.password === pInput);
 
-            const foundUser = (globalState.registeredUsers || []).find(u => u.username === uInput && u.password === pInput);
-            if (foundUser) {
-                currentUser = foundUser;
-                renderNavbar();
+            if (match) {
+                currentUser = match;
                 closeAuthModal();
-                alert(`Welcome back, ${currentUser.username}!`);
+                renderNavbar();
+                if (currentUser.username === 'Patil' || currentUser.role === 'admin') {
+                    switchView('admin-view');
+                } else {
+                    switchView('home-view');
+                }
             } else {
-                const isPending = (globalState.pendingUsers || []).some(u => u.username === uInput);
+                const isPending = globalState.pendingUsers.some(u => u.username === uInput);
                 if (isPending) alert('Your account is pending approval from the Admin.');
                 else alert('Invalid username or password.');
             }
@@ -984,9 +1066,6 @@
 
             const uInput = document.getElementById('signup-username').value.trim();
             const pInput = document.getElementById('signup-password').value.trim();
-
-            if (!globalState.registeredUsers) globalState.registeredUsers = [];
-            if (!globalState.pendingUsers) globalState.pendingUsers = [];
 
             const exists = globalState.registeredUsers.some(u => u.username === uInput) || 
                            globalState.pendingUsers.some(u => u.username === uInput);
