@@ -37,7 +37,7 @@
             flex-direction: column;
         }
 
-        /* Navbar */
+        /* Top Bar / Nav */
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -88,7 +88,7 @@
             background: rgba(56, 139, 253, 0.1);
         }
 
-        /* Container & Layout */
+        /* Layout Container */
         .main-container {
             max-width: 1280px;
             width: 100%;
@@ -97,7 +97,7 @@
             flex-grow: 1;
         }
 
-        /* Hero Section */
+        /* Hero Banner */
         .hero-section {
             text-align: center;
             margin-bottom: 40px;
@@ -124,7 +124,7 @@
             margin: 0 auto 24px auto;
         }
 
-        /* Controls / Search */
+        /* Search & Filter Controls */
         .controls-bar {
             display: flex;
             gap: 16px;
@@ -189,7 +189,7 @@
             border-color: var(--accent-primary);
         }
 
-        /* Grid & Cards */
+        /* Document Grid */
         .notes-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -238,7 +238,24 @@
             line-height: 1.4;
         }
 
-        /* Buttons */
+        /* Category Section Header */
+        .category-header {
+            grid-column: 1 / -1;
+            margin-top: 24px;
+            margin-bottom: 8px;
+        }
+
+        .category-header h3 {
+            color: var(--accent-primary);
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 8px;
+            font-size: 1.15rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* UI Buttons */
         .btn {
             padding: 10px 18px;
             border-radius: 8px;
@@ -276,24 +293,7 @@
             color: #fff;
         }
 
-        /* Section Category Headers */
-        .category-header {
-            grid-column: 1 / -1;
-            margin-top: 24px;
-            margin-bottom: 8px;
-        }
-
-        .category-header h3 {
-            color: var(--accent-primary);
-            border-bottom: 1px solid var(--glass-border);
-            padding-bottom: 8px;
-            font-size: 1.15rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Admin Panels & Tables */
+        /* Admin Panels & Management Tables */
         .glass-card {
             background: var(--card-bg);
             border: 1px solid var(--glass-border);
@@ -341,7 +341,7 @@
             outline: none;
         }
 
-        /* Modal */
+        /* Modal Overlay & Box */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -378,8 +378,7 @@
             <button class="nav-btn active" id="nav-home" onclick="switchView('home-view')">Home Library</button>
             <button class="nav-btn hidden" id="nav-admin" onclick="switchView('admin-view')">Admin Panel</button>
             <div id="user-nav-section">
-                <button class="btn btn-secondary" onclick="openAuthModal('login')">Sign In</button>
-            </div>
+                </div>
         </div>
     </nav>
 
@@ -388,13 +387,13 @@
         <section id="home-view">
             <div class="hero-section">
                 <h1 class="hero-title">Study Resources & Notes</h1>
-                <p class="hero-subtitle">Access Class 10 Maharashtra Board notes, short revision guides, and mind maps in PDF format.</p>
+                <p class="hero-subtitle">Access Class 10 Maharashtra Board detailed notes, short guides, and mind maps instantly.</p>
             </div>
 
             <div class="controls-bar">
                 <div class="search-wrapper">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" class="search-input" id="search-input" placeholder="Search notes by subject or title..." oninput="handleSearch(this.value)">
+                    <input type="text" class="search-input" id="search-input" placeholder="Search notes by subject or topic..." oninput="handleSearch(this.value)">
                 </div>
 
                 <div class="filter-tabs">
@@ -413,7 +412,7 @@
             <h2 style="font-size: 1.5rem; margin-bottom: 20px;">Admin Dashboard</h2>
 
             <div class="glass-card">
-                <h3 style="margin-bottom: 16px; font-size: 1.1rem;"><i class="fa-solid fa-cloud-arrow-up"></i> Upload Study Material</h3>
+                <h3 style="margin-bottom: 16px; font-size: 1.1rem;"><i class="fa-solid fa-cloud-arrow-up"></i> Upload New Document</h3>
                 <form id="upload-note-form" style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 16px; align-items: end;">
                     <div class="form-group" style="margin-bottom:0;">
                         <label>Document Title</label>
@@ -515,7 +514,7 @@
         let searchQuery = '';
         let isPasswordStrongEnough = false;
 
-        // Sync with Cloud
+        // Cloud Data Synchronization
         async function syncFromCloud() {
             try {
                 const res = await fetch(`${JSONBIN_URL}/latest`, {
@@ -545,13 +544,13 @@
             }
         }
 
-        // Initialize App Catalog
+        // Initialize Catalog Default Items
         function initializeCatalog() {
             if (!globalState.eduNotesCatalog || globalState.eduNotesCatalog.length === 0) {
                 globalState.eduNotesCatalog = [
                     // DETAILED NOTES
-                    { id: '1', name: 'Science 1 Detailed Notes Pdf 2', category: 'Detailed Notes', url: 'Class 10 S & T Part 1 .pdf' },
-                    { id: '2', name: 'Science 2 Detailed Notes Pdf 2', category: 'Detailed Notes', url: 'Class 10 S & T Part 2 .pdf' },
+                    { id: '1', name: 'Science 1 Detailed Notes', category: 'Detailed Notes', url: 'Class 10 S & T Part 1 .pdf' },
+                    { id: '2', name: 'Science 2 Detailed Notes', category: 'Detailed Notes', url: 'Class 10 S & T Part 2 .pdf' },
                     { id: '3', name: 'Geography Detailed Notes', category: 'Detailed Notes', url: 'Geography notes.pdf' },
                     { id: '4', name: 'History Detailed Notes', category: 'Detailed Notes', url: 'History Notes .pdf' },
 
@@ -575,7 +574,7 @@
             }
         }
 
-        // Render Notes with Categories
+        // Render Notes Grouped by Category Titles
         function renderNotes() {
             const container = document.getElementById('notes-container');
             const categories = ['Detailed Notes', 'Short Notes', 'Mind Maps'];
@@ -587,7 +586,7 @@
             });
 
             if (filteredList.length === 0) {
-                container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">No study materials found matching your criteria.</div>`;
+                container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">No study materials found.</div>`;
                 return;
             }
 
@@ -656,7 +655,7 @@
             }
         }
 
-        // View Switcher
+        // View Controller
         function switchView(viewId) {
             document.getElementById('home-view').classList.add('hidden');
             document.getElementById('admin-view').classList.add('hidden');
@@ -675,7 +674,7 @@
             }
         }
 
-        // Auth Logic
+        // Authentication Modal Handlers
         function openAuthModal(mode) {
             document.getElementById('auth-modal').classList.remove('hidden');
             toggleAuthMode(mode);
@@ -785,7 +784,7 @@
             switchView('home-view');
         }
 
-        // Admin Management
+        // Admin Table Actions
         function renderAdminData() {
             const pendingTbody = document.getElementById('pending-users-tbody');
             pendingTbody.innerHTML = '';
@@ -838,7 +837,7 @@
             renderAdminData();
         }
 
-        // Handle Admin Publish File
+        // File Upload Category Auto-Assignment
         document.getElementById('upload-note-form').onsubmit = async function(e) {
             e.preventDefault();
             const title = document.getElementById('note-title-input').value.trim();
@@ -864,15 +863,16 @@
                     url: reader.result
                 });
                 await syncToCloud();
-                alert('Document published!');
+                alert('Document published successfully!');
                 document.getElementById('upload-note-form').reset();
             };
         };
 
-        // On Load
+        // App Initialization
         window.onload = async function() {
             await syncFromCloud();
             initializeCatalog();
+            renderUserNavbar();
             renderNotes();
         };
     </script>
